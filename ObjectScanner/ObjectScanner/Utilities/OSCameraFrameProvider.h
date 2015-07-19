@@ -13,5 +13,5 @@
 @property (nonatomic, strong, readonly) NSMutableArray *images;
 
 - (void)prepareFramesWithCompletion:(void(^)())completion;
-- (void)startSimulatingFrameCaptures;
+
 @end

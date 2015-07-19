@@ -8,10 +8,6 @@
 
 #import "OSCameraFrameProvider.h"
 
-static int const kOSCameraFrameProviderWidth = 640;
-static int const kOSCameraFrameProviderHeight = 480;
-
-
 @interface OSCameraFrameProvider()
 
 @property (nonatomic, strong) NSMutableArray *images;

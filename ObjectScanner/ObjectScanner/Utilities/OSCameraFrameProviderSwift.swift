@@ -73,7 +73,7 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider{
         });
     }
     
-    override func startSimulatingFrameCaptures() {
+    func startSimulatingFrameCaptures() {
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), { () -> Void in
             self.broadcastFrameAtIndex(0, toIndex: self.images!.count - 1, completion: nil);
         });
