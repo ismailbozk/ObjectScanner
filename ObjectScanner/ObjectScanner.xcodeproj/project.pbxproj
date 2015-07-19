@@ -34,6 +34,7 @@
 		46B005771B5BDCC000AE781D /* father3.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005721B5BDCC000AE781D /* father3.png */; };
 		46B005781B5BDCC000AE781D /* father4.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005731B5BDCC000AE781D /* father4.png */; };
 		46B005791B5BDCC000AE781D /* father5.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005741B5BDCC000AE781D /* father5.png */; };
+		46B0057D1B5BFF4F00AE781D /* RGBDepthFrame.metal in Sources */ = {isa = PBXBuildFile; fileRef = 46B0057C1B5BFF4F00AE781D /* RGBDepthFrame.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +84,7 @@
 		46B005721B5BDCC000AE781D /* father3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father3.png; sourceTree = "<group>"; };
 		46B005731B5BDCC000AE781D /* father4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father4.png; sourceTree = "<group>"; };
 		46B005741B5BDCC000AE781D /* father5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father5.png; sourceTree = "<group>"; };
+		46B0057C1B5BFF4F00AE781D /* RGBDepthFrame.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = RGBDepthFrame.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,6 +210,7 @@
 			isa = PBXGroup;
 			children = (
 				462689561B5B7C7200CFA891 /* OSBaseFrame.swift */,
+				46B0057C1B5BFF4F00AE781D /* RGBDepthFrame.metal */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -358,6 +361,7 @@
 				462689621B5BAE5000CFA891 /* OSOpeningViewController.swift in Sources */,
 				467344751B5A74F8009B3728 /* OSCameraFrameProvider.m in Sources */,
 				462689601B5BA2B100CFA891 /* OS3DFrameProviderProtocol.swift in Sources */,
+				46B0057D1B5BFF4F00AE781D /* RGBDepthFrame.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
