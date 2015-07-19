@@ -27,15 +27,15 @@
 		467344751B5A74F8009B3728 /* OSCameraFrameProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 467344741B5A74F8009B3728 /* OSCameraFrameProvider.m */; };
 		467344781B5A75FF009B3728 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 467344771B5A75FF009B3728 /* Images.xcassets */; };
 		467344841B5A76DB009B3728 /* father1Depth.csv in Resources */ = {isa = PBXBuildFile; fileRef = 4673447A1B5A76DB009B3728 /* father1Depth.csv */; };
-		467344851B5A76DB009B3728 /* father1RGB.csv in Resources */ = {isa = PBXBuildFile; fileRef = 4673447B1B5A76DB009B3728 /* father1RGB.csv */; };
 		467344861B5A76DB009B3728 /* father2Depth.csv in Resources */ = {isa = PBXBuildFile; fileRef = 4673447C1B5A76DB009B3728 /* father2Depth.csv */; };
-		467344871B5A76DB009B3728 /* father2RGB.csv in Resources */ = {isa = PBXBuildFile; fileRef = 4673447D1B5A76DB009B3728 /* father2RGB.csv */; };
 		467344881B5A76DB009B3728 /* father3Depth.csv in Resources */ = {isa = PBXBuildFile; fileRef = 4673447E1B5A76DB009B3728 /* father3Depth.csv */; };
-		467344891B5A76DB009B3728 /* father3RGB.csv in Resources */ = {isa = PBXBuildFile; fileRef = 4673447F1B5A76DB009B3728 /* father3RGB.csv */; };
 		4673448A1B5A76DB009B3728 /* father4Depth.csv in Resources */ = {isa = PBXBuildFile; fileRef = 467344801B5A76DB009B3728 /* father4Depth.csv */; };
-		4673448B1B5A76DB009B3728 /* father4RGB.csv in Resources */ = {isa = PBXBuildFile; fileRef = 467344811B5A76DB009B3728 /* father4RGB.csv */; };
 		4673448C1B5A76DB009B3728 /* father5Depth.csv in Resources */ = {isa = PBXBuildFile; fileRef = 467344821B5A76DB009B3728 /* father5Depth.csv */; };
-		4673448D1B5A76DB009B3728 /* father5RGB.csv in Resources */ = {isa = PBXBuildFile; fileRef = 467344831B5A76DB009B3728 /* father5RGB.csv */; };
+		46B005751B5BDCC000AE781D /* father1.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005701B5BDCC000AE781D /* father1.png */; };
+		46B005761B5BDCC000AE781D /* father2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005711B5BDCC000AE781D /* father2.png */; };
+		46B005771B5BDCC000AE781D /* father3.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005721B5BDCC000AE781D /* father3.png */; };
+		46B005781B5BDCC000AE781D /* father4.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005731B5BDCC000AE781D /* father4.png */; };
+		46B005791B5BDCC000AE781D /* father5.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005741B5BDCC000AE781D /* father5.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,16 +79,16 @@
 		467344741B5A74F8009B3728 /* OSCameraFrameProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCameraFrameProvider.m; sourceTree = "<group>"; };
 		467344771B5A75FF009B3728 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4673447A1B5A76DB009B3728 /* father1Depth.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father1Depth.csv; sourceTree = "<group>"; };
-		4673447B1B5A76DB009B3728 /* father1RGB.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father1RGB.csv; sourceTree = "<group>"; };
 		4673447C1B5A76DB009B3728 /* father2Depth.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father2Depth.csv; sourceTree = "<group>"; };
-		4673447D1B5A76DB009B3728 /* father2RGB.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father2RGB.csv; sourceTree = "<group>"; };
 		4673447E1B5A76DB009B3728 /* father3Depth.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father3Depth.csv; sourceTree = "<group>"; };
-		4673447F1B5A76DB009B3728 /* father3RGB.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father3RGB.csv; sourceTree = "<group>"; };
 		467344801B5A76DB009B3728 /* father4Depth.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father4Depth.csv; sourceTree = "<group>"; };
-		467344811B5A76DB009B3728 /* father4RGB.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father4RGB.csv; sourceTree = "<group>"; };
 		467344821B5A76DB009B3728 /* father5Depth.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father5Depth.csv; sourceTree = "<group>"; };
-		467344831B5A76DB009B3728 /* father5RGB.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father5RGB.csv; sourceTree = "<group>"; };
 		4673448F1B5A7BB2009B3728 /* OS-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OS-Prefix.pch"; sourceTree = "<group>"; };
+		46B005701B5BDCC000AE781D /* father1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father1.png; sourceTree = "<group>"; };
+		46B005711B5BDCC000AE781D /* father2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father2.png; sourceTree = "<group>"; };
+		46B005721B5BDCC000AE781D /* father3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father3.png; sourceTree = "<group>"; };
+		46B005731B5BDCC000AE781D /* father4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father4.png; sourceTree = "<group>"; };
+		46B005741B5BDCC000AE781D /* father5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father5.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -234,16 +234,16 @@
 		467344791B5A76A4009B3728 /* TestData */ = {
 			isa = PBXGroup;
 			children = (
+				46B005701B5BDCC000AE781D /* father1.png */,
 				4673447A1B5A76DB009B3728 /* father1Depth.csv */,
-				4673447B1B5A76DB009B3728 /* father1RGB.csv */,
+				46B005711B5BDCC000AE781D /* father2.png */,
 				4673447C1B5A76DB009B3728 /* father2Depth.csv */,
-				4673447D1B5A76DB009B3728 /* father2RGB.csv */,
+				46B005721B5BDCC000AE781D /* father3.png */,
 				4673447E1B5A76DB009B3728 /* father3Depth.csv */,
-				4673447F1B5A76DB009B3728 /* father3RGB.csv */,
+				46B005731B5BDCC000AE781D /* father4.png */,
 				467344801B5A76DB009B3728 /* father4Depth.csv */,
-				467344811B5A76DB009B3728 /* father4RGB.csv */,
+				46B005741B5BDCC000AE781D /* father5.png */,
 				467344821B5A76DB009B3728 /* father5Depth.csv */,
-				467344831B5A76DB009B3728 /* father5RGB.csv */,
 			);
 			path = TestData;
 			sourceTree = "<group>";
@@ -330,17 +330,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				467344501B5A735B009B3728 /* Main.storyboard in Resources */,
-				467344851B5A76DB009B3728 /* father1RGB.csv in Resources */,
-				467344891B5A76DB009B3728 /* father3RGB.csv in Resources */,
-				467344871B5A76DB009B3728 /* father2RGB.csv in Resources */,
 				467344781B5A75FF009B3728 /* Images.xcassets in Resources */,
+				46B005751B5BDCC000AE781D /* father1.png in Resources */,
 				4673448A1B5A76DB009B3728 /* father4Depth.csv in Resources */,
+				46B005761B5BDCC000AE781D /* father2.png in Resources */,
 				4673448C1B5A76DB009B3728 /* father5Depth.csv in Resources */,
 				467344881B5A76DB009B3728 /* father3Depth.csv in Resources */,
 				467344841B5A76DB009B3728 /* father1Depth.csv in Resources */,
+				46B005781B5BDCC000AE781D /* father4.png in Resources */,
+				46B005791B5BDCC000AE781D /* father5.png in Resources */,
 				467344551B5A735B009B3728 /* LaunchScreen.xib in Resources */,
-				4673448D1B5A76DB009B3728 /* father5RGB.csv in Resources */,
-				4673448B1B5A76DB009B3728 /* father4RGB.csv in Resources */,
+				46B005771B5BDCC000AE781D /* father3.png in Resources */,
 				467344861B5A76DB009B3728 /* father2Depth.csv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
