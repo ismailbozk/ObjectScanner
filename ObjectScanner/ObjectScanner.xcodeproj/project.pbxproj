@@ -7,7 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		462689441B5A9A9800CFA891 /* OSOpeningViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 462689431B5A9A9800CFA891 /* OSOpeningViewController.m */; };
+		462689471B5AA25B00CFA891 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 462689461B5AA25A00CFA891 /* Metal.framework */; };
+		462689491B5AA26300CFA891 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 462689481B5AA26300CFA891 /* QuartzCore.framework */; };
+		4626894C1B5AA44D00CFA891 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4626894B1B5AA44D00CFA891 /* UIKit.framework */; };
+		4626894E1B5AA45700CFA891 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4626894D1B5AA45700CFA891 /* CoreGraphics.framework */; };
+		462689511B5AA9BD00CFA891 /* OSBaseFrame.mm in Sources */ = {isa = PBXBuildFile; fileRef = 462689501B5AA9BD00CFA891 /* OSBaseFrame.mm */; };
+		462689541B5AA9CF00CFA891 /* OSKinectFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 462689531B5AA9CF00CFA891 /* OSKinectFrame.m */; };
+		462689571B5B7C7200CFA891 /* OSBaseFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462689561B5B7C7200CFA891 /* OSBaseFrame.swift */; };
+		4626895A1B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462689591B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift */; };
+		4626895E1B5B9AB200CFA891 /* OSViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4626895D1B5B9AB200CFA891 /* OSViewController.swift */; };
+		462689601B5BA2B100CFA891 /* OS3DFrameProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4626895F1B5BA2B100CFA891 /* OS3DFrameProviderProtocol.swift */; };
+		462689621B5BAE5000CFA891 /* OSOpeningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462689611B5BAE5000CFA891 /* OSOpeningViewController.swift */; };
 		467344471B5A735B009B3728 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 467344461B5A735B009B3728 /* main.m */; };
 		4673444A1B5A735B009B3728 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 467344491B5A735B009B3728 /* AppDelegate.m */; };
 		467344501B5A735B009B3728 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4673444E1B5A735B009B3728 /* Main.storyboard */; };
@@ -39,8 +49,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		462689421B5A9A9800CFA891 /* OSOpeningViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSOpeningViewController.h; sourceTree = "<group>"; };
-		462689431B5A9A9800CFA891 /* OSOpeningViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSOpeningViewController.m; sourceTree = "<group>"; };
+		462689461B5AA25A00CFA891 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		462689481B5AA26300CFA891 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		4626894B1B5AA44D00CFA891 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		4626894D1B5AA45700CFA891 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		4626894F1B5AA9BD00CFA891 /* OSBaseFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSBaseFrame.h; sourceTree = "<group>"; };
+		462689501B5AA9BD00CFA891 /* OSBaseFrame.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSBaseFrame.mm; sourceTree = "<group>"; };
+		462689521B5AA9CF00CFA891 /* OSKinectFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSKinectFrame.h; sourceTree = "<group>"; };
+		462689531B5AA9CF00CFA891 /* OSKinectFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSKinectFrame.m; sourceTree = "<group>"; };
+		462689561B5B7C7200CFA891 /* OSBaseFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSBaseFrame.swift; sourceTree = "<group>"; };
+		462689581B5B7CB800CFA891 /* ObjectScanner-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ObjectScanner-Bridging-Header.h"; sourceTree = "<group>"; };
+		462689591B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSCameraFrameProviderSwift.swift; sourceTree = "<group>"; };
+		4626895D1B5B9AB200CFA891 /* OSViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSViewController.swift; sourceTree = "<group>"; };
+		4626895F1B5BA2B100CFA891 /* OS3DFrameProviderProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OS3DFrameProviderProtocol.swift; sourceTree = "<group>"; };
+		462689611B5BAE5000CFA891 /* OSOpeningViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSOpeningViewController.swift; sourceTree = "<group>"; };
 		467344411B5A735B009B3728 /* ObjectScanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjectScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		467344451B5A735B009B3728 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		467344461B5A735B009B3728 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -74,6 +96,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4626894E1B5AA45700CFA891 /* CoreGraphics.framework in Frameworks */,
+				4626894C1B5AA44D00CFA891 /* UIKit.framework in Frameworks */,
+				462689491B5AA26300CFA891 /* QuartzCore.framework in Frameworks */,
+				462689471B5AA25B00CFA891 /* Metal.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,12 +113,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		462689451B5AA24600CFA891 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4626894D1B5AA45700CFA891 /* CoreGraphics.framework */,
+				4626894B1B5AA44D00CFA891 /* UIKit.framework */,
+				462689481B5AA26300CFA891 /* QuartzCore.framework */,
+				462689461B5AA25A00CFA891 /* Metal.framework */,
+			);
+			name = Frameworks;
+			path = ObjectScanner;
+			sourceTree = "<group>";
+		};
 		467344381B5A735B009B3728 = {
 			isa = PBXGroup;
 			children = (
 				467344431B5A735B009B3728 /* ObjectScanner */,
 				4673445D1B5A735B009B3728 /* ObjectScannerTests */,
 				467344421B5A735B009B3728 /* Products */,
+				462689451B5AA24600CFA891 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -124,6 +163,7 @@
 		467344441B5A735B009B3728 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				462689581B5B7CB800CFA891 /* ObjectScanner-Bridging-Header.h */,
 				467344451B5A735B009B3728 /* Info.plist */,
 				467344461B5A735B009B3728 /* main.m */,
 				4673448F1B5A7BB2009B3728 /* OS-Prefix.pch */,
@@ -153,8 +193,8 @@
 			children = (
 				4673446B1B5A73AD009B3728 /* ViewController.h */,
 				4673446C1B5A73AD009B3728 /* ViewController.m */,
-				462689421B5A9A9800CFA891 /* OSOpeningViewController.h */,
-				462689431B5A9A9800CFA891 /* OSOpeningViewController.m */,
+				4626895D1B5B9AB200CFA891 /* OSViewController.swift */,
+				462689611B5BAE5000CFA891 /* OSOpeningViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -164,6 +204,8 @@
 			children = (
 				467344731B5A74F8009B3728 /* OSCameraFrameProvider.h */,
 				467344741B5A74F8009B3728 /* OSCameraFrameProvider.m */,
+				462689591B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift */,
+				4626895F1B5BA2B100CFA891 /* OS3DFrameProviderProtocol.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -171,6 +213,11 @@
 		4673446F1B5A73DC009B3728 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4626894F1B5AA9BD00CFA891 /* OSBaseFrame.h */,
+				462689501B5AA9BD00CFA891 /* OSBaseFrame.mm */,
+				462689521B5AA9CF00CFA891 /* OSKinectFrame.h */,
+				462689531B5AA9CF00CFA891 /* OSKinectFrame.m */,
+				462689561B5B7C7200CFA891 /* OSBaseFrame.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -312,11 +359,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				462689441B5A9A9800CFA891 /* OSOpeningViewController.m in Sources */,
+				462689541B5AA9CF00CFA891 /* OSKinectFrame.m in Sources */,
 				4673444A1B5A735B009B3728 /* AppDelegate.m in Sources */,
+				4626895A1B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift in Sources */,
+				462689511B5AA9BD00CFA891 /* OSBaseFrame.mm in Sources */,
+				462689571B5B7C7200CFA891 /* OSBaseFrame.swift in Sources */,
 				4673446D1B5A73AD009B3728 /* ViewController.m in Sources */,
 				467344471B5A735B009B3728 /* main.m in Sources */,
+				4626895E1B5B9AB200CFA891 /* OSViewController.swift in Sources */,
+				462689621B5BAE5000CFA891 /* OSOpeningViewController.swift in Sources */,
 				467344751B5A74F8009B3728 /* OSCameraFrameProvider.m in Sources */,
+				462689601B5BA2B100CFA891 /* OS3DFrameProviderProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -378,6 +431,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -422,6 +476,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -444,6 +499,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				EXECUTABLE_PREFIX = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/ObjectScanner/OS-Prefix.pch";
@@ -451,6 +507,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ObjectScanner/ObjectScanner-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -458,6 +516,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				EXECUTABLE_PREFIX = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/ObjectScanner/OS-Prefix.pch";
@@ -465,6 +524,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ObjectScanner/ObjectScanner-Bridging-Header.h";
 			};
 			name = Release;
 		};

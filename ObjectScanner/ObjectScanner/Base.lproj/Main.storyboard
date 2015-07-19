@@ -7,7 +7,7 @@
         <!--Opening View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="OSOpeningViewController" id="BYZ-38-t0r" customClass="OSOpeningViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OSOpeningViewController" id="BYZ-38-t0r" customClass="OSOpeningViewController" customModule="ObjectScanner" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -30,7 +30,7 @@
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
-                        <outlet property="imgView" destination="Vdx-qh-gOy" id="dv6-Fc-MBw"/>
+                        <outlet property="imageView" destination="Vdx-qh-gOy" id="Mtf-j0-eeo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -6,12 +6,12 @@
 //  Copyright (c) 2015 Ismail Bozkurt. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
 @interface OSCameraFrameProvider : NSObject
 
 @property (nonatomic, strong, readonly) NSMutableArray *images;
 
-+ (instancetype)sharedInstance;
-
 - (void)prepareFramesWithCompletion:(void(^)())completion;
-
+- (void)startSimulatingFrameCaptures;
 @end

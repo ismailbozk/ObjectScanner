@@ -1,13 +1,13 @@
 //
-//  OSOpeningViewController.h
+//  OSKinectFrame.m
 //  ObjectScanner
 //
 //  Created by Ismail Bozkurt on 18/07/2015.
 //  Copyright (c) 2015 Ismail Bozkurt. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "OSKinectFrame.h"
 
-@interface OSOpeningViewController : ViewController
+@implementation OSKinectFrame
 
 @end
