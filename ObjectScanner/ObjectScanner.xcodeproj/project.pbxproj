@@ -11,8 +11,6 @@
 		462689491B5AA26300CFA891 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 462689481B5AA26300CFA891 /* QuartzCore.framework */; };
 		4626894C1B5AA44D00CFA891 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4626894B1B5AA44D00CFA891 /* UIKit.framework */; };
 		4626894E1B5AA45700CFA891 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4626894D1B5AA45700CFA891 /* CoreGraphics.framework */; };
-		462689511B5AA9BD00CFA891 /* OSBaseFrame.mm in Sources */ = {isa = PBXBuildFile; fileRef = 462689501B5AA9BD00CFA891 /* OSBaseFrame.mm */; };
-		462689541B5AA9CF00CFA891 /* OSKinectFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 462689531B5AA9CF00CFA891 /* OSKinectFrame.m */; };
 		462689571B5B7C7200CFA891 /* OSBaseFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462689561B5B7C7200CFA891 /* OSBaseFrame.swift */; };
 		4626895A1B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462689591B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift */; };
 		4626895E1B5B9AB200CFA891 /* OSViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4626895D1B5B9AB200CFA891 /* OSViewController.swift */; };
@@ -53,10 +51,6 @@
 		462689481B5AA26300CFA891 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		4626894B1B5AA44D00CFA891 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4626894D1B5AA45700CFA891 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		4626894F1B5AA9BD00CFA891 /* OSBaseFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSBaseFrame.h; sourceTree = "<group>"; };
-		462689501B5AA9BD00CFA891 /* OSBaseFrame.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSBaseFrame.mm; sourceTree = "<group>"; };
-		462689521B5AA9CF00CFA891 /* OSKinectFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSKinectFrame.h; sourceTree = "<group>"; };
-		462689531B5AA9CF00CFA891 /* OSKinectFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSKinectFrame.m; sourceTree = "<group>"; };
 		462689561B5B7C7200CFA891 /* OSBaseFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSBaseFrame.swift; sourceTree = "<group>"; };
 		462689581B5B7CB800CFA891 /* ObjectScanner-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ObjectScanner-Bridging-Header.h"; sourceTree = "<group>"; };
 		462689591B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSCameraFrameProviderSwift.swift; sourceTree = "<group>"; };
@@ -213,10 +207,6 @@
 		4673446F1B5A73DC009B3728 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				4626894F1B5AA9BD00CFA891 /* OSBaseFrame.h */,
-				462689501B5AA9BD00CFA891 /* OSBaseFrame.mm */,
-				462689521B5AA9CF00CFA891 /* OSKinectFrame.h */,
-				462689531B5AA9CF00CFA891 /* OSKinectFrame.m */,
 				462689561B5B7C7200CFA891 /* OSBaseFrame.swift */,
 			);
 			path = Models;
@@ -359,10 +349,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				462689541B5AA9CF00CFA891 /* OSKinectFrame.m in Sources */,
 				4673444A1B5A735B009B3728 /* AppDelegate.m in Sources */,
 				4626895A1B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift in Sources */,
-				462689511B5AA9BD00CFA891 /* OSBaseFrame.mm in Sources */,
 				462689571B5B7C7200CFA891 /* OSBaseFrame.swift in Sources */,
 				4673446D1B5A73AD009B3728 /* ViewController.m in Sources */,
 				467344471B5A735B009B3728 /* main.m in Sources */,
