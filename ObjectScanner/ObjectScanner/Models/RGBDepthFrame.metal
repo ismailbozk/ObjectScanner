@@ -37,11 +37,20 @@ struct OSPoint {
 //    float b;
 };
 
-kernel void calibrateFrame(const device OSPointIn *inputVectors [[buffer(0)]],
+kernel void calibrateFrame(const constant OSPointIn *inputVectors [[buffer(0)]],
                            device OSPoint *outputPointCloud [[buffer(1)]],
-                           uint id [[thread_position_in_grid]])
+                           const uint id [[thread_position_in_grid]])
 {
-    outputPointCloud[id].x = inputVectors[id].x;
-    outputPointCloud[id].y = inputVectors[id].y;
-    outputPointCloud[id].z = inputVectors[id].depth;
+    if (id > 1)
+    {
+        outputPointCloud[id].x = inputVectors[id-1].x;
+        outputPointCloud[id].y = inputVectors[id-1].y;
+        outputPointCloud[id].z = inputVectors[id-1].depth;
+    }
+    else
+    {
+        outputPointCloud[id].x = inputVectors[id].x;
+        outputPointCloud[id].y = inputVectors[id].y;
+        outputPointCloud[id].z = inputVectors[id].depth;
+    }
 }
