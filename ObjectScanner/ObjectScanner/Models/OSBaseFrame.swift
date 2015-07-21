@@ -80,7 +80,7 @@ class OSBaseFrame {
     
     //MARK: Metal
     
-    private let device : MTLDevice = MTLCreateSystemDefaultDevice();
+    private let device : MTLDevice = MTLCreateSystemDefaultDevice()!;
     private var commandQueue : MTLCommandQueue?;
     private var defaultLibrary: MTLLibrary?;
     private var calibrateFrameFunction : MTLFunction?;
@@ -90,14 +90,19 @@ class OSBaseFrame {
     
     private func prepareMetalForSurgery()
     {
-        var startTime = CACurrentMediaTime();
+        let startTime = CACurrentMediaTime();
 
         
         self.commandQueue = self.device.newCommandQueue();
         self.defaultLibrary = self.device.newDefaultLibrary();
         self.calibrateFrameFunction = self.defaultLibrary?.newFunctionWithName("calibrateFrame");
         //FIXME very costly try to minimize the impact.
-        self.metalComputePipelineState = self.device.newComputePipelineStateWithFunction(self.calibrateFrameFunction!, error: nil);
+        do{
+            self.metalComputePipelineState = try self.device.newComputePipelineStateWithFunction(self.calibrateFrameFunction!);
+        } catch _ {
+            self.metalComputePipelineState = nil
+        };
+//        self.metalComputePipelineState = self.device.newComputePipelineStateWithFunction(self.calibrateFrameFunction!);
         self.commandBuffer = self.commandQueue?.commandBuffer();
         self.computeCommandEncoder = self.commandBuffer?.computeCommandEncoder();
         self.computeCommandEncoder?.setComputePipelineState(self.metalComputePipelineState!);
@@ -121,12 +126,12 @@ class OSBaseFrame {
         
         let inputByteLength = dataSize * sizeofValue(inputVetors[0]);
         let i2 = dataSize * sizeof(OSPointIn);
-        var inVectorBuffer = self.device.newBufferWithBytes(&inputVetors, length: inputByteLength, options: nil);
+        var inVectorBuffer = self.device.newBufferWithBytes(&inputVetors, length: inputByteLength, options: []);
         self.computeCommandEncoder?.setBuffer(inVectorBuffer, offset: 0, atIndex: 0);
 
         let outputByteLength = dataSize * sizeofValue(self.pointCloud[0]);
         let o2 = dataSize * sizeof(OSPoint);
-        var outputBuffer = self.device.newBufferWithBytes(&self.pointCloud, length: outputByteLength, options: nil);
+        var outputBuffer = self.device.newBufferWithBytes(&self.pointCloud, length: outputByteLength, options: []);
         self.computeCommandEncoder?.setBuffer(outputBuffer, offset: 0, atIndex: 1);
         
         let threadGroupCountX = 32;
@@ -147,7 +152,7 @@ class OSBaseFrame {
         var dataIn = NSData(bytesNoCopy: inVectorBuffer.contents(), length: inputByteLength, freeWhenDone: false);
         dataIn.getBytes(&inputVectors2, length: inputByteLength);
         
-        var elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;
+        let elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;
         
         NSLog("depth frames written in %f seconds" ,elapsedTime);
     }

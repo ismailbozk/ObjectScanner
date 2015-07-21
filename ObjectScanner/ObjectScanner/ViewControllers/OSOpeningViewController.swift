@@ -15,15 +15,16 @@ class OSOpeningViewController: OSViewController , OS3DFrameProviderProtocol {
     
 // MARK: Lifecycle
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
         OSCameraFrameProviderSwift.sharedInstance.delegate = self;
+
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad();
         
-        var c = OSBaseFrame();
+        let c = OSBaseFrame();
         c.unitTest();
         
 //        self.startLoading();

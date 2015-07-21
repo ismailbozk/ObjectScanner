@@ -53,7 +53,7 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider{
     
     override func prepareFramesWithCompletion(completion: (() -> Void)!) {
         super.prepareFramesWithCompletion({ () -> Void in
-            var startTime = CACurrentMediaTime();
+            let startTime = CACurrentMediaTime();
 
             //do additional stuff here
             self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("father1"));
@@ -62,7 +62,7 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider{
             self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("father4"));
             self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("father5"));
 
-            var elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;
+            let elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;
             
             NSLog("depth frames read in %f seconds" ,elapsedTime);
 
@@ -100,16 +100,22 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider{
     }
     
     class private func stringForFile(fileName:String, fileExtension:String) -> String?{
-        var pathToFile : String! = NSBundle.mainBundle().pathForResource(fileName, ofType: fileExtension);
+        let pathToFile : String! = NSBundle.mainBundle().pathForResource(fileName, ofType: fileExtension);
         var error : NSError?;
-        var fileString  : String? = String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding, error: &error);
+        var fileString  : String?
+        do {
+            fileString = try String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
+        } catch let error1 as NSError {
+            error = error1
+            fileString = nil
+        };
 
         return fileString;
     }
     
     class private func depthFrameForFile (prefix:String) -> DepthFrame{
-        var resourceFileName:String = String(format: "%@Depth", prefix);
-        var fileString = self.stringForFile(resourceFileName, fileExtension: "csv");
+        let resourceFileName:String = String(format: "%@Depth", prefix);
+        let fileString = self.stringForFile(resourceFileName, fileExtension: "csv");
         
         if (fileString == nil)
         {
@@ -118,7 +124,7 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider{
     
         let depthValues : [String] = fileString!.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString:"\n;"));
 
-        var count = (imageSize.height.rawValue * imageSize.width.rawValue);
+        let count = (imageSize.height.rawValue * imageSize.width.rawValue);
         
         var df : DepthFrame = DepthFrame(rows: imageSize.height.rawValue, cols: imageSize.width.rawValue);
         assert(count == depthValues.count , "depthFile and image size must be equal");
