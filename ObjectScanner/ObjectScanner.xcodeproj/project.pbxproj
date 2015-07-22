@@ -35,6 +35,7 @@
 		46B005781B5BDCC000AE781D /* father4.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005731B5BDCC000AE781D /* father4.png */; };
 		46B005791B5BDCC000AE781D /* father5.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005741B5BDCC000AE781D /* father5.png */; };
 		46B0057D1B5BFF4F00AE781D /* RGBDepthFrame.metal in Sources */ = {isa = PBXBuildFile; fileRef = 46B0057C1B5BFF4F00AE781D /* RGBDepthFrame.metal */; };
+		46BB660E1B5FA0BE001897AD /* OSTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BB660D1B5FA0BE001897AD /* OSTimer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +86,7 @@
 		46B005731B5BDCC000AE781D /* father4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father4.png; sourceTree = "<group>"; };
 		46B005741B5BDCC000AE781D /* father5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father5.png; sourceTree = "<group>"; };
 		46B0057C1B5BFF4F00AE781D /* RGBDepthFrame.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = RGBDepthFrame.metal; sourceTree = "<group>"; };
+		46BB660D1B5FA0BE001897AD /* OSTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSTimer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,6 +204,7 @@
 				467344741B5A74F8009B3728 /* OSCameraFrameProvider.m */,
 				462689591B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift */,
 				4626895F1B5BA2B100CFA891 /* OS3DFrameProviderProtocol.swift */,
+				46BB660D1B5FA0BE001897AD /* OSTimer.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -360,6 +363,7 @@
 				4673446D1B5A73AD009B3728 /* ViewController.m in Sources */,
 				467344471B5A735B009B3728 /* main.m in Sources */,
 				4626895E1B5B9AB200CFA891 /* OSViewController.swift in Sources */,
+				46BB660E1B5FA0BE001897AD /* OSTimer.swift in Sources */,
 				462689621B5BAE5000CFA891 /* OSOpeningViewController.swift in Sources */,
 				467344751B5A74F8009B3728 /* OSCameraFrameProvider.m in Sources */,
 				462689601B5BA2B100CFA891 /* OS3DFrameProviderProtocol.swift in Sources */,

@@ -92,10 +92,19 @@ class OSBaseFrame {
     {
         let startTime = CACurrentMediaTime();
 
-        
+        OSTimer.tic();
         self.commandQueue = self.device.newCommandQueue();
+        OSTimer.toc("commandQueue creation");
+        
+        OSTimer.tic();
         self.defaultLibrary = self.device.newDefaultLibrary();
+        OSTimer.toc("default Library creation");
+        
+        OSTimer.tic();
         self.calibrateFrameFunction = self.defaultLibrary?.newFunctionWithName("calibrateFrame");
+        OSTimer.toc("frame funtion creation");
+        
+        OSTimer.tic();
         //FIXME very costly try to minimize the impact.
         do{
             self.metalComputePipelineState = try self.device.newComputePipelineStateWithFunction(self.calibrateFrameFunction!);
@@ -103,10 +112,21 @@ class OSBaseFrame {
             self.metalComputePipelineState = nil
         };
 //        self.metalComputePipelineState = self.device.newComputePipelineStateWithFunction(self.calibrateFrameFunction!);
-        self.commandBuffer = self.commandQueue?.commandBuffer();
-        self.computeCommandEncoder = self.commandBuffer?.computeCommandEncoder();
-        self.computeCommandEncoder?.setComputePipelineState(self.metalComputePipelineState!);
+        OSTimer.toc("compute pipeline creation");
         
+        OSTimer.tic();
+        self.commandBuffer = self.commandQueue?.commandBuffer();
+        OSTimer.toc("command buffer creation");
+        
+        OSTimer.tic();
+        self.computeCommandEncoder = self.commandBuffer?.computeCommandEncoder();
+        OSTimer.toc("command encoder creation");
+        
+        OSTimer.tic();
+        self.computeCommandEncoder?.setComputePipelineState(self.metalComputePipelineState!);
+        OSTimer.toc("command encoder set Pipeline");
+        
+        OSTimer.tic();
         let dataSize : Int = 128//self.height * self.width;
         
         var inputVetors : [OSPointIn] = [OSPointIn](count: dataSize, repeatedValue: OSPointIn());
@@ -123,7 +143,9 @@ class OSBaseFrame {
             inputVetors[pos].y = y;
             inputVetors[pos].depth = depth;
         }
+        OSTimer.toc("input data creation");
         
+        OSTimer.tic();
         let inputByteLength = dataSize * sizeofValue(inputVetors[0]);
         let i2 = dataSize * sizeof(OSPointIn);
         var inVectorBuffer = self.device.newBufferWithBytes(&inputVetors, length: inputByteLength, options: []);
@@ -133,20 +155,33 @@ class OSBaseFrame {
         let o2 = dataSize * sizeof(OSPoint);
         var outputBuffer = self.device.newBufferWithBytes(&self.pointCloud, length: outputByteLength, options: []);
         self.computeCommandEncoder?.setBuffer(outputBuffer, offset: 0, atIndex: 1);
+        OSTimer.toc("passing data into buffers");
         
+        
+        OSTimer.tic();
         let threadGroupCountX = 32;
         var threadGroupCount = MTLSize(width: threadGroupCountX, height: 1, depth: 1)
         var threadGroups = MTLSize(width:(dataSize + threadGroupCountX - 1) / threadGroupCountX, height:1, depth:1);
         
         self.computeCommandEncoder?.dispatchThreadgroups(threadGroupCount, threadsPerThreadgroup: threadGroups);
+        OSTimer.toc("compute command encoder setting thread groups");
         
+        OSTimer.tic();
         self.computeCommandEncoder?.endEncoding();
-        self.commandBuffer?.commit();
-        self.commandBuffer?.waitUntilCompleted();
+        OSTimer.toc("compute command encoder end encoding");
         
+        OSTimer.tic();
+        self.commandBuffer?.commit();
+        OSTimer.toc("command buffer commit");
+        
+        OSTimer.tic();
+        self.commandBuffer?.waitUntilCompleted();
+        OSTimer.toc("command buffer wait until completed IMPORTANT");
+        
+        OSTimer.tic();
         var data = NSData(bytesNoCopy: outputBuffer.contents(), length: self.pointCloud.count * sizeof(OSPoint), freeWhenDone: false);
         data.getBytes(&self.pointCloud, length: outputByteLength);
-        
+        OSTimer.toc("Reading data from gpu");
         
         var inputVectors2 = [OSPointIn](count: dataSize, repeatedValue: OSPointIn());
         var dataIn = NSData(bytesNoCopy: inVectorBuffer.contents(), length: inputByteLength, freeWhenDone: false);
@@ -154,7 +189,7 @@ class OSBaseFrame {
         
         let elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;
         
-        NSLog("depth frames written in %f seconds" ,elapsedTime);
+        NSLog("Total process %f seconds" ,elapsedTime);
     }
     
     func unitTest()
