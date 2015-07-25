@@ -37,6 +37,7 @@
 		46B005791B5BDCC000AE781D /* father5.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005741B5BDCC000AE781D /* father5.png */; };
 		46B0057D1B5BFF4F00AE781D /* RGBDepthFrame.metal in Sources */ = {isa = PBXBuildFile; fileRef = 46B0057C1B5BFF4F00AE781D /* RGBDepthFrame.metal */; };
 		46BB660E1B5FA0BE001897AD /* OSTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BB660D1B5FA0BE001897AD /* OSTimer.swift */; };
+		46F806BD1B63F44000A15A40 /* OSScannerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F806BC1B63F44000A15A40 /* OSScannerManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,7 @@
 		46B005741B5BDCC000AE781D /* father5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father5.png; sourceTree = "<group>"; };
 		46B0057C1B5BFF4F00AE781D /* RGBDepthFrame.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = RGBDepthFrame.metal; sourceTree = "<group>"; };
 		46BB660D1B5FA0BE001897AD /* OSTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSTimer.swift; sourceTree = "<group>"; };
+		46F806BC1B63F44000A15A40 /* OSScannerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSScannerManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +155,7 @@
 				467344531B5A735B009B3728 /* LaunchScreen.xib */,
 				4673446A1B5A7379009B3728 /* ViewControllers */,
 				4673446F1B5A73DC009B3728 /* Models */,
+				46F806BB1B63F3C800A15A40 /* Managers */,
 				4673446E1B5A73BA009B3728 /* Utilities */,
 				467344761B5A75D2009B3728 /* Resources */,
 				467344441B5A735B009B3728 /* Supporting Files */,
@@ -245,6 +248,14 @@
 				467344821B5A76DB009B3728 /* father5Depth.csv */,
 			);
 			path = TestData;
+			sourceTree = "<group>";
+		};
+		46F806BB1B63F3C800A15A40 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				46F806BC1B63F44000A15A40 /* OSScannerManager.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -362,6 +373,7 @@
 			files = (
 				4673444A1B5A735B009B3728 /* AppDelegate.m in Sources */,
 				4626895A1B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift in Sources */,
+				46F806BD1B63F44000A15A40 /* OSScannerManager.swift in Sources */,
 				462689571B5B7C7200CFA891 /* OSBaseFrame.swift in Sources */,
 				4673446D1B5A73AD009B3728 /* ViewController.m in Sources */,
 				467344471B5A735B009B3728 /* main.m in Sources */,

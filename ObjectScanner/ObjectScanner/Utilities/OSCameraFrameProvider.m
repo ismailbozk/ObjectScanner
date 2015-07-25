@@ -32,7 +32,7 @@
 
 - (void)prepareFramesWithCompletion:(void(^)())completion
 {
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
         CFTimeInterval startTime = CACurrentMediaTime();
 
         [self.images addObject:[OSCameraFrameProvider imageForFilePrefix:@"father1"]];

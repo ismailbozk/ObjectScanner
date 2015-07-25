@@ -42,7 +42,7 @@
     if (!_loadingView)
     {
         _loadingView = [[UIView alloc] initWithFrame:self.view.bounds];
-        _loadingView.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.8];
+        _loadingView.backgroundColor = [UIColor colorWithWhite:0. alpha:0.8];
         [_loadingView setAutoresizingMask:(UIViewAutoresizingFlexibleHeight|
                                            UIViewAutoresizingFlexibleWidth|
                                            UIViewAutoresizingFlexibleBottomMargin|
@@ -58,9 +58,6 @@
 {
     if (self.loadingProgressCounter == 0)
     {
-        if (self.loadingView == nil)
-        {
-        }
         [UIView animateWithDuration:.3f animations:^{
             [self.view addSubview:self.loadingView];
             self.loadingView.alpha = 1.f;

@@ -139,7 +139,7 @@ class OSBaseFrame : OSContentLoadingProtocol{
 
     static func loadContent(completionHandler : (() -> Void)!)
     {
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)) { () -> Void in
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0)) { () -> Void in
             OSBaseFrame.device ;
             
             OSBaseFrame.commandQueue ;
