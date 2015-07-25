@@ -85,84 +85,41 @@ class OSBaseFrame : OSContentLoadingProtocol{
     private func prepareMetalForSurgery()
     {
         let startTime = CACurrentMediaTime();
-
-        if (OSBaseFrame.metalComputePipelineState == nil)
-        {
-            OSTimer.tic();
-            //FIXME very costly try to minimize the impact.
-            do{
-                OSBaseFrame.metalComputePipelineState = try OSBaseFrame.device.newComputePipelineStateWithFunction(OSBaseFrame.calibrateFrameFunction);
-            } catch _ {
-                OSBaseFrame.metalComputePipelineState = nil
-            };
-            OSTimer.toc("compute pipeline creation");
-        }
         
-        
-        OSTimer.tic();
         self.commandBuffer = OSBaseFrame.commandQueue.commandBuffer();
-        OSTimer.toc("command buffer creation");
         
-        OSTimer.tic();
         self.computeCommandEncoder = self.commandBuffer?.computeCommandEncoder();
-        OSTimer.toc("command encoder creation");
         
-        OSTimer.tic();
         self.computeCommandEncoder?.setComputePipelineState(OSBaseFrame.metalComputePipelineState!);
-        OSTimer.toc("command encoder set Pipeline");
         
+        //pass the data to GPU
         let dataSize : Int = self.notCalibratedDepth.count//self.height * self.width;
 
-        OSTimer.tic();
         let inputByteLength = dataSize * sizeof(Float);
         let inVectorBuffer = OSBaseFrame.device.newBufferWithBytes(&self.notCalibratedDepth, length: inputByteLength, options:[]);
         self.computeCommandEncoder?.setBuffer(inVectorBuffer, offset: 0, atIndex: 0);
-
         let outputByteLength = dataSize * sizeof(OSPoint);
         let outputBuffer = OSBaseFrame.device.newBufferWithBytes(&self.pointCloud, length: outputByteLength, options: []);
         self.computeCommandEncoder?.setBuffer(outputBuffer, offset: 0, atIndex: 1);
-        
         self.computeCommandEncoder?.setBuffer(OSBaseFrame.calibrationMatrixBuffer, offset: 0, atIndex: 2);
         
-        OSTimer.toc("passing data into buffers");
-        
-        
-        OSTimer.tic();
         let threadGroupCountX = dataSize / 512;
         let threadGroupCount = MTLSize(width: threadGroupCountX, height: 1, depth: 1)
         let threadGroups = MTLSize(width:(dataSize + threadGroupCountX - 1) / threadGroupCountX, height:1, depth:1);
         
         self.computeCommandEncoder?.dispatchThreadgroups(threadGroupCount, threadsPerThreadgroup: threadGroups);
-        OSTimer.toc("compute command encoder setting thread groups");
         
-        OSTimer.tic();
         self.computeCommandEncoder?.endEncoding();
-        OSTimer.toc("compute command encoder end encoding");
         
-//        self.commandBuffer?.addCompletedHandler({ (commandBuffer : MTLCommandBuffer) -> Void in
-//            OSTimer.tic();
-//            let data = NSData(bytesNoCopy: outputBuffer.contents(), length: self.pointCloud.count * sizeof(OSPoint), freeWhenDone: false);
-//            data.getBytes(&self.pointCloud, length: outputByteLength);
-//            OSTimer.toc("Reading data from gpu");
-//        });
+        self.commandBuffer?.addCompletedHandler({ (commandBuffer : MTLCommandBuffer) -> Void in
+            let data = NSData(bytesNoCopy: outputBuffer.contents(), length: self.pointCloud.count * sizeof(OSPoint), freeWhenDone: false);
+            data.getBytes(&self.pointCloud, length: outputByteLength);
+            
+            let elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;
+            print("Total process \(elapsedTime) seconds");
+        });
         
-        OSTimer.tic();
         self.commandBuffer?.commit();
-        OSTimer.toc("command buffer commit");
-        
-        OSTimer.tic();
-        self.commandBuffer?.waitUntilCompleted();
-        OSTimer.toc("command buffer wait until completed IMPORTANT")
-        
-        OSTimer.tic();
-        let data = NSData(bytesNoCopy: outputBuffer.contents(), length: self.pointCloud.count * sizeof(OSPoint), freeWhenDone: false);
-        data.getBytes(&self.pointCloud, length: outputByteLength);
-        OSTimer.toc("Reading data from gpu");
-
-        
-        let elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;
-        
-        NSLog("Total process %f seconds" ,elapsedTime);
     }
     
     func unitTest(multiplier : Float)
@@ -182,37 +139,29 @@ class OSBaseFrame : OSContentLoadingProtocol{
 
     static func loadContent(completionHandler : (() -> Void)!)
     {
-        OSTimer.tic();
-        OSBaseFrame.device ;//= MTLCreateSystemDefaultDevice()!;
-        OSTimer.toc("Device created");
-        
-        OSTimer.tic();
-        OSBaseFrame.commandQueue ;//= device.newCommandQueue();
-        OSTimer.toc("command queue created");
-        
-        OSTimer.tic();
-        OSBaseFrame.defaultLibrary ;//= device.newDefaultLibrary();
-        OSTimer.toc("default library");
-        
-        OSTimer.tic();
-        OSBaseFrame.calibrateFrameFunction ;// = defaultLibrary?.newFunctionWithName("calibrateFrame");
-        OSTimer.toc("frame funtion created");
-        
-        let calibrationMatrixBtyeLength = calibrationMatrix.count * sizeof(Float);
-        calibrationMatrixBuffer = OSBaseFrame.device.newBufferWithBytes(&calibrationMatrix, length: calibrationMatrixBtyeLength, options: []);
-        
-        if (OSBaseFrame.metalComputePipelineState == nil)
-        {
-            OSTimer.tic();
-            //FIXME very costly try to minimize the impact.
-            do{
-                OSBaseFrame.metalComputePipelineState = try OSBaseFrame.device.newComputePipelineStateWithFunction(OSBaseFrame.calibrateFrameFunction);
-            } catch _ {
-                OSBaseFrame.metalComputePipelineState = nil
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)) { () -> Void in
+            OSBaseFrame.device ;
+            
+            OSBaseFrame.commandQueue ;
+            
+            OSBaseFrame.defaultLibrary ;
+            
+            OSBaseFrame.calibrateFrameFunction ;
+            
+            let calibrationMatrixBtyeLength = calibrationMatrix.count * sizeof(Float);
+            calibrationMatrixBuffer = OSBaseFrame.device.newBufferWithBytes(&calibrationMatrix, length: calibrationMatrixBtyeLength, options: []);
+            
+            if (OSBaseFrame.metalComputePipelineState == nil)
+            {
+                do{
+                    OSBaseFrame.metalComputePipelineState = try OSBaseFrame.device.newComputePipelineStateWithFunction(OSBaseFrame.calibrateFrameFunction);
+                } catch _ {
+                    OSBaseFrame.metalComputePipelineState = nil
+                };
+            }
+            dispatch_sync(dispatch_get_main_queue()) { () -> Void in
+                completionHandler?();
             };
-            OSTimer.toc("compute pipeline creation");
-        }
-        
-        completionHandler?();
+        };
     }
 }

@@ -35,7 +35,7 @@ struct DepthFrame {
     }
 }
 
-class OSCameraFrameProviderSwift : OSCameraFrameProvider{
+class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtocol{
     
     static let sharedInstance = OSCameraFrameProviderSwift();
     
@@ -43,7 +43,6 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider{
     
     var depthFrames : [DepthFrame] = [DepthFrame]();
 
-    
     enum imageSize:Int{
         case width = 640
         case height = 480
@@ -55,7 +54,6 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider{
         super.prepareFramesWithCompletion({ () -> Void in
             let startTime = CACurrentMediaTime();
 
-            //do additional stuff here
             self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("father1"));
             self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("father2"));
             self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("father3"));
@@ -64,7 +62,7 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider{
 
             let elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;
             
-            NSLog("depth frames read in %f seconds" ,elapsedTime);
+            print("depth frames read in \(elapsedTime) seconds")
 
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 completion();
@@ -100,12 +98,10 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider{
     
     class private func stringForFile(fileName:String, fileExtension:String) -> String?{
         let pathToFile : String! = NSBundle.mainBundle().pathForResource(fileName, ofType: fileExtension);
-        var error : NSError?;
         var fileString  : String?
         do {
             fileString = try String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
-        } catch let error1 as NSError {
-            error = error1
+        } catch _ {
             fileString = nil
         };
 
@@ -140,6 +136,7 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider{
         return df;
     }
     
+// MARK: OSContentLoadingProtocol
     
     static func loadContent(completionHandler : (() -> Void)!)
     {

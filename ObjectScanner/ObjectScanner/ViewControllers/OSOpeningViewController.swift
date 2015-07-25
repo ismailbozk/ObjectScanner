@@ -24,11 +24,11 @@ class OSOpeningViewController: OSViewController , OS3DFrameProviderProtocol {
     override func viewDidLoad() {
         super.viewDidLoad();
         
-        let c = OSBaseFrame();
-        c.unitTest(2.0);
-        
-        let d = OSBaseFrame();
-        d.unitTest(1.0);
+//        let c = OSBaseFrame();
+//        c.unitTest(2.0);
+//        
+//        let d = OSBaseFrame();
+//        d.unitTest(1.0);
         
 //        self.startLoading();
 //        var frameProvider : OSCameraFrameProviderSwift = OSCameraFrameProviderSwift.sharedInstance;
