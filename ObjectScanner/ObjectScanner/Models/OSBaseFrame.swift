@@ -12,13 +12,23 @@ import simd
 
 private let dummyDataSize : Int = 307200;
 
-
 struct OSPoint {
     var x : Float = 0.0;
     var y : Float = 0.0;
     var z : Float = 0.0;
     var t : Float = 1.0;
 }
+
+private var calibrationMatrix : [Float] = [9.9984628826577793e-01 , 1.2635359098409581e-03 , -1.7487233004436643e-02, 0,
+                                           -1.4779096108364480e-03, 9.9992385683542895e-01 , -1.2251380107679535e-02, 0,
+                                           1.7470421412464927e-02 , 1.2275341476520762e-02 , 9.9977202419716948e-01 , 0,
+                                           1.9985242312092553e-02 , -7.4423738761617583e-04, -1.0916736334336222e-02,1];
+
+//90 degree counter clockwise rotaion on z axis + -1 translation x axis
+//private var calibrationMatrix : [Float] = [0 , 1 , 0, 0,
+//    -1, 0 , 0, 0,
+//    0 , 0 , 0 , 0,
+//    -1 , 0, 0, 1];
 
 class OSBaseFrame : OSContentLoadingProtocol{
 //    let image : UIImage;
@@ -67,6 +77,8 @@ class OSBaseFrame : OSContentLoadingProtocol{
     static private let calibrateFrameFunction : MTLFunction = defaultLibrary.newFunctionWithName("calibrateFrame")!;
     static private var metalComputePipelineState : MTLComputePipelineState?;//very costly
     
+    static private var calibrationMatrixBuffer : MTLBuffer?;
+    
     private var commandBuffer : MTLCommandBuffer?;
     private var computeCommandEncoder : MTLComputeCommandEncoder?;
     
@@ -74,22 +86,6 @@ class OSBaseFrame : OSContentLoadingProtocol{
     {
         let startTime = CACurrentMediaTime();
 
-        OSTimer.tic();
-        OSBaseFrame.device ;//= MTLCreateSystemDefaultDevice()!;
-        OSTimer.toc("Device created");
-        
-        OSTimer.tic();
-        OSBaseFrame.commandQueue ;//= device.newCommandQueue();
-        OSTimer.toc("command queue created");
-        
-        OSTimer.tic();
-        OSBaseFrame.defaultLibrary ;//= device.newDefaultLibrary();
-        OSTimer.toc("default library");
-        
-        OSTimer.tic();
-        OSBaseFrame.calibrateFrameFunction ;// = defaultLibrary?.newFunctionWithName("calibrateFrame");
-        OSTimer.toc("frame funtion created");
-        
         if (OSBaseFrame.metalComputePipelineState == nil)
         {
             OSTimer.tic();
@@ -99,10 +95,8 @@ class OSBaseFrame : OSContentLoadingProtocol{
             } catch _ {
                 OSBaseFrame.metalComputePipelineState = nil
             };
-            //        self.metalComputePipelineState = self.device.newComputePipelineStateWithFunction(self.calibrateFrameFunction!);
             OSTimer.toc("compute pipeline creation");
         }
-        
         
         
         OSTimer.tic();
@@ -127,11 +121,14 @@ class OSBaseFrame : OSContentLoadingProtocol{
         let outputByteLength = dataSize * sizeof(OSPoint);
         let outputBuffer = OSBaseFrame.device.newBufferWithBytes(&self.pointCloud, length: outputByteLength, options: []);
         self.computeCommandEncoder?.setBuffer(outputBuffer, offset: 0, atIndex: 1);
+        
+        self.computeCommandEncoder?.setBuffer(OSBaseFrame.calibrationMatrixBuffer, offset: 0, atIndex: 2);
+        
         OSTimer.toc("passing data into buffers");
         
         
         OSTimer.tic();
-        let threadGroupCountX = dataSize / 128;
+        let threadGroupCountX = dataSize / 512;
         let threadGroupCount = MTLSize(width: threadGroupCountX, height: 1, depth: 1)
         let threadGroups = MTLSize(width:(dataSize + threadGroupCountX - 1) / threadGroupCountX, height:1, depth:1);
         
@@ -142,22 +139,26 @@ class OSBaseFrame : OSContentLoadingProtocol{
         self.computeCommandEncoder?.endEncoding();
         OSTimer.toc("compute command encoder end encoding");
         
+//        self.commandBuffer?.addCompletedHandler({ (commandBuffer : MTLCommandBuffer) -> Void in
+//            OSTimer.tic();
+//            let data = NSData(bytesNoCopy: outputBuffer.contents(), length: self.pointCloud.count * sizeof(OSPoint), freeWhenDone: false);
+//            data.getBytes(&self.pointCloud, length: outputByteLength);
+//            OSTimer.toc("Reading data from gpu");
+//        });
+        
         OSTimer.tic();
         self.commandBuffer?.commit();
         OSTimer.toc("command buffer commit");
         
         OSTimer.tic();
         self.commandBuffer?.waitUntilCompleted();
-        OSTimer.toc("command buffer wait until completed IMPORTANT");
+        OSTimer.toc("command buffer wait until completed IMPORTANT")
         
         OSTimer.tic();
         let data = NSData(bytesNoCopy: outputBuffer.contents(), length: self.pointCloud.count * sizeof(OSPoint), freeWhenDone: false);
         data.getBytes(&self.pointCloud, length: outputByteLength);
         OSTimer.toc("Reading data from gpu");
-        
-        var inputVectors2 = [Float](count: dataSize, repeatedValue: -1.0);
-        let dataIn = NSData(bytesNoCopy: inVectorBuffer.contents(), length: inputByteLength, freeWhenDone: false);
-        dataIn.getBytes(&inputVectors2, length: inputByteLength);
+
         
         let elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;
         
@@ -176,10 +177,9 @@ class OSBaseFrame : OSContentLoadingProtocol{
     
     init()
     {
-//        OSBaseFrame.loadContent();
+        OSBaseFrame.loadContent(nil);
     }
 
-    
     static func loadContent(completionHandler : (() -> Void)!)
     {
         OSTimer.tic();
@@ -198,6 +198,9 @@ class OSBaseFrame : OSContentLoadingProtocol{
         OSBaseFrame.calibrateFrameFunction ;// = defaultLibrary?.newFunctionWithName("calibrateFrame");
         OSTimer.toc("frame funtion created");
         
+        let calibrationMatrixBtyeLength = calibrationMatrix.count * sizeof(Float);
+        calibrationMatrixBuffer = OSBaseFrame.device.newBufferWithBytes(&calibrationMatrix, length: calibrationMatrixBtyeLength, options: []);
+        
         if (OSBaseFrame.metalComputePipelineState == nil)
         {
             OSTimer.tic();
@@ -210,7 +213,6 @@ class OSBaseFrame : OSContentLoadingProtocol{
             OSTimer.toc("compute pipeline creation");
         }
         
-        
-        completionHandler();
+        completionHandler?();
     }
 }
