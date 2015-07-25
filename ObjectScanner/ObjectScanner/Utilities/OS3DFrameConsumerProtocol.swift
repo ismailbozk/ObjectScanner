@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol OS3DFrameProviderProtocol:class
+protocol OS3DFrameConsumerProtocol:class
 {
     func didCapturedFrame(image : UIImage, depthFrame: [Float]);
 }

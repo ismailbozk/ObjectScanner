@@ -39,7 +39,7 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
     
     static let sharedInstance = OSCameraFrameProviderSwift();
     
-    weak var delegate : OS3DFrameProviderProtocol?;
+    weak var delegate : OS3DFrameConsumerProtocol?;
     
     var depthFrames : [DepthFrame] = [DepthFrame]();
 

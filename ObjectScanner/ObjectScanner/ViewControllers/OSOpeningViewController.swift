@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OSOpeningViewController: OSViewController , OS3DFrameProviderProtocol {
+class OSOpeningViewController: OSViewController {
     
 // MARK: Variables
     @IBOutlet weak var imageView: UIImageView!
@@ -17,40 +17,7 @@ class OSOpeningViewController: OSViewController , OS3DFrameProviderProtocol {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
-        OSCameraFrameProviderSwift.sharedInstance.delegate = self;
 
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad();
-        
-//        let c = OSBaseFrame();
-//        c.unitTest(2.0);
-//        
-//        let d = OSBaseFrame();
-//        d.unitTest(1.0);
-        
-//        self.startLoading();
-//        var frameProvider : OSCameraFrameProviderSwift = OSCameraFrameProviderSwift.sharedInstance;
-//        frameProvider.prepareFramesWithCompletion({ () -> Void in
-//            self.stopLoading();
-//            self.imageView.image = frameProvider.images[0] as? UIImage;
-//            frameProvider.startSimulatingFrameCaptures();
-//        });
-    }
-    
-    
-// MARK: OS3DFrameProviderProtocol
-    
-    func didCapturedFrame(image: UIImage, depthFrame: [Float])
-    {
-        
-    }
-    
-// MARK: load content
-    
-    func loadContent()
-    {
-        
-    }
 }
