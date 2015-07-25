@@ -19,12 +19,15 @@ constant float fy_d = 1.0 / 5.9104053696870778e+02;
 constant float cx_d = 3.3930780975300314e+02;
 constant float cy_d = 2.4273913761751615e+02;
 
-struct OSPointIn {
-    int x;
-    int y;
-    
-    float depth;
-};
+constant uint width = 640;
+constant uint height = 480;
+
+//struct OSPointIn {
+//    int x;
+//    int y;
+//    
+//    float depth;
+//};
 
 struct OSPoint {
     float x;
@@ -37,20 +40,21 @@ struct OSPoint {
 //    float b;
 };
 
-kernel void calibrateFrame(const constant OSPointIn *inputVectors [[buffer(0)]],
+kernel void calibrateFrame(const constant float *depthValues [[buffer(0)]],
                            device OSPoint *outputPointCloud [[buffer(1)]],
                            const uint id [[thread_position_in_grid]])
 {
+    uint x = id % width;
+    uint y = id / width;
+    outputPointCloud[id].x = x;
+    outputPointCloud[id].y = y;
+    
     if (id > 1)
     {
-        outputPointCloud[id].x = inputVectors[id-1].x;
-        outputPointCloud[id].y = inputVectors[id-1].y;
-        outputPointCloud[id].z = inputVectors[id-1].depth;
+        outputPointCloud[id].z = depthValues[id-1];
     }
     else
     {
-        outputPointCloud[id].x = inputVectors[id].x;
-        outputPointCloud[id].y = inputVectors[id].y;
-        outputPointCloud[id].z = inputVectors[id].depth;
+        outputPointCloud[id].z = depthValues[id];
     }
 }

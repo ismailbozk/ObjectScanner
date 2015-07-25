@@ -25,7 +25,10 @@ class OSOpeningViewController: OSViewController , OS3DFrameProviderProtocol {
         super.viewDidLoad();
         
         let c = OSBaseFrame();
-        c.unitTest();
+        c.unitTest(2.0);
+        
+        let d = OSBaseFrame();
+        d.unitTest(1.0);
         
 //        self.startLoading();
 //        var frameProvider : OSCameraFrameProviderSwift = OSCameraFrameProviderSwift.sharedInstance;
@@ -39,7 +42,15 @@ class OSOpeningViewController: OSViewController , OS3DFrameProviderProtocol {
     
 // MARK: OS3DFrameProviderProtocol
     
-    func didCapturedFrame(image: UIImage, depthFrame: [Float]) {
+    func didCapturedFrame(image: UIImage, depthFrame: [Float])
+    {
+        
+    }
+    
+// MARK: load content
+    
+    func loadContent()
+    {
         
     }
 }

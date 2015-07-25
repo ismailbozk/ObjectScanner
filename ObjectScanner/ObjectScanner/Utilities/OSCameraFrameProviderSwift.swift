@@ -66,7 +66,6 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider{
             
             NSLog("depth frames read in %f seconds" ,elapsedTime);
 
-            
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 completion();
             })
@@ -139,5 +138,11 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider{
         }
         
         return df;
+    }
+    
+    
+    static func loadContent(completionHandler : (() -> Void)!)
+    {
+        self.sharedInstance.prepareFramesWithCompletion(completionHandler);
     }
 }

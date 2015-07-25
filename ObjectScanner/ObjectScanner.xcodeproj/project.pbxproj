@@ -29,6 +29,7 @@
 		467344881B5A76DB009B3728 /* father3Depth.csv in Resources */ = {isa = PBXBuildFile; fileRef = 4673447E1B5A76DB009B3728 /* father3Depth.csv */; };
 		4673448A1B5A76DB009B3728 /* father4Depth.csv in Resources */ = {isa = PBXBuildFile; fileRef = 467344801B5A76DB009B3728 /* father4Depth.csv */; };
 		4673448C1B5A76DB009B3728 /* father5Depth.csv in Resources */ = {isa = PBXBuildFile; fileRef = 467344821B5A76DB009B3728 /* father5Depth.csv */; };
+		467925CC1B63A6C80037D04D /* OSContentLoadingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467925CB1B63A6C80037D04D /* OSContentLoadingProtocol.swift */; };
 		46B005751B5BDCC000AE781D /* father1.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005701B5BDCC000AE781D /* father1.png */; };
 		46B005761B5BDCC000AE781D /* father2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005711B5BDCC000AE781D /* father2.png */; };
 		46B005771B5BDCC000AE781D /* father3.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005721B5BDCC000AE781D /* father3.png */; };
@@ -80,6 +81,7 @@
 		467344801B5A76DB009B3728 /* father4Depth.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father4Depth.csv; sourceTree = "<group>"; };
 		467344821B5A76DB009B3728 /* father5Depth.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father5Depth.csv; sourceTree = "<group>"; };
 		4673448F1B5A7BB2009B3728 /* OS-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OS-Prefix.pch"; sourceTree = "<group>"; };
+		467925CB1B63A6C80037D04D /* OSContentLoadingProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSContentLoadingProtocol.swift; sourceTree = "<group>"; };
 		46B005701B5BDCC000AE781D /* father1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father1.png; sourceTree = "<group>"; };
 		46B005711B5BDCC000AE781D /* father2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father2.png; sourceTree = "<group>"; };
 		46B005721B5BDCC000AE781D /* father3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father3.png; sourceTree = "<group>"; };
@@ -205,6 +207,7 @@
 				462689591B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift */,
 				4626895F1B5BA2B100CFA891 /* OS3DFrameProviderProtocol.swift */,
 				46BB660D1B5FA0BE001897AD /* OSTimer.swift */,
+				467925CB1B63A6C80037D04D /* OSContentLoadingProtocol.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -363,6 +366,7 @@
 				4673446D1B5A73AD009B3728 /* ViewController.m in Sources */,
 				467344471B5A735B009B3728 /* main.m in Sources */,
 				4626895E1B5B9AB200CFA891 /* OSViewController.swift in Sources */,
+				467925CC1B63A6C80037D04D /* OSContentLoadingProtocol.swift in Sources */,
 				46BB660E1B5FA0BE001897AD /* OSTimer.swift in Sources */,
 				462689621B5BAE5000CFA891 /* OSOpeningViewController.swift in Sources */,
 				467344751B5A74F8009B3728 /* OSCameraFrameProvider.m in Sources */,
