@@ -43,7 +43,7 @@ kernel void calibrateFrame(const constant float *depthValues [[buffer(0)]],
         tempPoint.w = 1.f;
         
         //calibrate 3D point to rgb frame coordinates
-        outputPointCloud[id] = calibrationMatrix * tempPoint;
+        tempPoint = calibrationMatrix * tempPoint;
         
         //corresponding 2D rgb frame coordinates for calibrated 3D point
         float invZ = 1.f / tempPoint.z;
