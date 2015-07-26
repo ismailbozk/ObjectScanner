@@ -23,20 +23,13 @@ class OSOpeningViewController: OSViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated);
         
-        if (OSScannerManager.sharedInstance.state == OSScannerManagerState.ContentLoading)
-        {
-            self.startLoading();
-        }
-        else
-        {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector:Selector("scannerManagerDidStartLoadingContent"), name: OSScannerManagerState.ContentLoading.rawValue, object: nil);
-        }
+        OSScannerManager.sharedInstance;    //this will trigger content loading
+        self.startLoading();
         NSNotificationCenter.defaultCenter().addObserver(self, selector:Selector("scannerManagerStatusDidLoadContent"), name: OSScannerManagerState.ContentLoaded.rawValue, object: nil);
     }
 
     override func viewDidDisappear(animated: Bool) {
         super.viewDidAppear(animated);
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: OSScannerManagerState.ContentLoading.rawValue, object: nil);
         NSNotificationCenter.defaultCenter().removeObserver(self, name: OSScannerManagerState.ContentLoaded.rawValue, object: nil);
     }
     
@@ -47,11 +40,7 @@ class OSOpeningViewController: OSViewController {
     }
     
 // MARK: OSScannerManager Utilities
-    func scannerManagerDidStartLoadingContent()
-    {
-        self.startLoading();
-    }
-    
+
     func scannerManagerStatusDidLoadContent()
     {
         self.stopLoading();
