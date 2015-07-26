@@ -6,11 +6,7 @@
 //  Copyright (c) 2015 Ismail Bozkurt. All rights reserved.
 //
 
-//import Cocoa
 import UIKit
-import simd
-
-private let dummyDataSize : Int = 307200;
 
 struct OSPoint {
     var x : Float = 0.0;
@@ -31,45 +27,43 @@ private var calibrationMatrix : [Float] = [9.9984628826577793e-01 , 1.2635359098
 //    -1 , 0, 0, 1];
 
 class OSBaseFrame : OSContentLoadingProtocol{
-//    let image : UIImage;
-//    var height : Int{
-//        get {
-//            return (Int)(self.image.size.height);
-//        }
-//    }
-//    var width : Int{
-//        get{
-//            return (Int)(self.image.size.width);
-//        }
-//    }
+    let image : UIImage;
+    var height : Int{
+        get {
+            return (Int)(self.image.size.height);
+        }
+    }
+    var width : Int{
+        get{
+            return (Int)(self.image.size.width);
+        }
+    }
 //    private (set) var calibratedDepth : [Float];
-    private var notCalibratedDepth: [Float] = [Float](count: dummyDataSize, repeatedValue: -1.0);
+    private var notCalibratedDepth: [Float]?;
     
-    var pointCloud : [OSPoint] = [OSPoint](count: dummyDataSize, repeatedValue: OSPoint());
+    var pointCloud : [OSPoint]?;
     
-//    init(image :UIImage, depth: [Float]){
-//        var size : Int = (Int)(image.size.width) * (Int)(image.size.height)
-//
-//        assert(size == depth.count, "depth frame and image must be equal size");
-//        
-//        self.image = image;
-//        self.notCalibratedDepth = depth;
+    init(image :UIImage, depth: [Float]){
+        let size : Int = (Int)(image.size.width) * (Int)(image.size.height)
+
+        assert(size == depth.count, "depth frame and image must be equal size");
+        
+        self.image = image;
+        self.notCalibratedDepth = depth;
 //        self.calibratedDepth = [Float](count: depth.count, repeatedValue: -1.0);//-1 will be the invalid depth data value
-//        self.pointCloud = [OSPoint](count: size, repeatedValue: OSPoint());
-//        
-//        self.prepareMetalForSurgery();
-//    }
+        self.pointCloud = [OSPoint](count: size, repeatedValue: OSPoint());
+    }
     
-//    subscript(row : Int, col : Int) -> OSPoint{
-//        get {
-//            return self.pointCloud[row * self.width + col];
+    subscript(row : Int, col : Int) -> OSPoint{
+        get {
+            return (self.pointCloud?[row * self.width + col])!;
+        }
+//        set (newValue) {
+//            self.pointCloud[row * self.width + col] = newValue;
 //        }
-////        set (newValue) {
-////            self.pointCloud[row * self.width + col] = newValue;
-////        }
-//    }
+    }
     
-    //MARK: Metal
+//MARK: Metal
     
     static private let device : MTLDevice = MTLCreateSystemDefaultDevice()!;
     static private let commandQueue : MTLCommandQueue = device.newCommandQueue();
@@ -82,7 +76,7 @@ class OSBaseFrame : OSContentLoadingProtocol{
     private var commandBuffer : MTLCommandBuffer?;
     private var computeCommandEncoder : MTLComputeCommandEncoder?;
     
-    private func prepareMetalForSurgery()
+    func preparePointCloud(completionHandler : (() -> Void)!)
     {
         let startTime = CACurrentMediaTime();
         
@@ -93,7 +87,7 @@ class OSBaseFrame : OSContentLoadingProtocol{
         self.computeCommandEncoder?.setComputePipelineState(OSBaseFrame.metalComputePipelineState!);
         
         //pass the data to GPU
-        let dataSize : Int = self.notCalibratedDepth.count//self.height * self.width;
+        let dataSize : Int = self.notCalibratedDepth!.count//self.height * self.width;
 
         let inputByteLength = dataSize * sizeof(Float);
         let inVectorBuffer = OSBaseFrame.device.newBufferWithBytes(&self.notCalibratedDepth, length: inputByteLength, options:[]);
@@ -103,6 +97,7 @@ class OSBaseFrame : OSContentLoadingProtocol{
         self.computeCommandEncoder?.setBuffer(outputBuffer, offset: 0, atIndex: 1);
         self.computeCommandEncoder?.setBuffer(OSBaseFrame.calibrationMatrixBuffer, offset: 0, atIndex: 2);
         
+        //prepare thread groups
         let threadGroupCountX = dataSize / 512;
         let threadGroupCount = MTLSize(width: threadGroupCountX, height: 1, depth: 1)
         let threadGroups = MTLSize(width:(dataSize + threadGroupCountX - 1) / threadGroupCountX, height:1, depth:1);
@@ -111,31 +106,20 @@ class OSBaseFrame : OSContentLoadingProtocol{
         
         self.computeCommandEncoder?.endEncoding();
         
-        self.commandBuffer?.addCompletedHandler({ (commandBuffer : MTLCommandBuffer) -> Void in
-            let data = NSData(bytesNoCopy: outputBuffer.contents(), length: self.pointCloud.count * sizeof(OSPoint), freeWhenDone: false);
+        self.commandBuffer?.addCompletedHandler({[unowned self] (commandBuffer : MTLCommandBuffer) -> Void in
+            let data = NSData(bytesNoCopy: outputBuffer.contents(), length: (self.pointCloud?.count)! * sizeof(OSPoint), freeWhenDone: false);
             data.getBytes(&self.pointCloud, length: outputByteLength);
             
             let elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;
             print("Total process \(elapsedTime) seconds");
+            
+            completionHandler?();
         });
         
         self.commandBuffer?.commit();
     }
     
-    func unitTest(multiplier : Float)
-    {
-        for (var x : Int = 0; x < self.notCalibratedDepth.count; x++)
-        {
-            self.notCalibratedDepth[x] = Float(x) * multiplier;
-        }
-        
-        self.prepareMetalForSurgery();
-    }
-    
-    init()
-    {
-        OSBaseFrame.loadContent(nil);
-    }
+// MARK: OSContentLoadingProtocol
 
     static func loadContent(completionHandler : (() -> Void)!)
     {
