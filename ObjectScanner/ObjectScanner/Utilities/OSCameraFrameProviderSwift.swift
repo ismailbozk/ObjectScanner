@@ -51,7 +51,7 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
 // MARK: Publics
     
     override func prepareFramesWithCompletion(completion: (() -> Void)!) {
-        super.prepareFramesWithCompletion({ () -> Void in
+        super.prepareFramesWithCompletion({[unowned self] () -> Void in
             let startTime = CACurrentMediaTime();
 
             self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("father1"));

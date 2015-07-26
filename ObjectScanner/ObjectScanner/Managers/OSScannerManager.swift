@@ -55,7 +55,7 @@ class OSScannerManager : OS3DFrameConsumerProtocol
             dispatch_group_leave(contentLoadingGroup);
         };
         
-        dispatch_group_notify(contentLoadingGroup, dispatch_get_main_queue()) { () -> Void in
+        dispatch_group_notify(contentLoadingGroup, dispatch_get_main_queue()) {[unowned self] () -> Void in
             OSTimer.toc("content loaded");
             self.state = .ContentLoaded;
         };
