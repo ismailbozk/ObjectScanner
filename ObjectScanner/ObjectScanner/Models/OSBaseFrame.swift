@@ -106,7 +106,7 @@ class OSBaseFrame : OSContentLoadingProtocol{
         
         self.computeCommandEncoder?.endEncoding();
         
-        self.commandBuffer?.addCompletedHandler({ (commandBuffer : MTLCommandBuffer) -> Void in
+        self.commandBuffer?.addCompletedHandler({[unowned self] (commandBuffer : MTLCommandBuffer) -> Void in
             let data = NSData(bytesNoCopy: outputBuffer.contents(), length: (self.pointCloud.count) * sizeof(OSPoint), freeWhenDone: false);
             data.getBytes(&self.pointCloud, length: outputByteLength);
             

@@ -101,7 +101,7 @@ class OSScannerManager : OS3DFrameConsumerProtocol
         // calibrating the frame
         dispatch_semaphore_wait(self.calibrationSemaphore, DISPATCH_TIME_FOREVER);
         OSTimer.tic();
-        frame.preparePointCloud { () -> Void in
+        frame.preparePointCloud {[unowned self] () -> Void in
             OSTimer.toc("frame calibrated and converted into 3D space");
             dispatch_semaphore_signal(self.calibrationSemaphore);
             self.appendFrame(frame);
