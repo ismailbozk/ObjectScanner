@@ -39,11 +39,11 @@ class OSBaseFrame : OSContentLoadingProtocol{
         }
     }
 //    private (set) var calibratedDepth : [Float];
-    private var notCalibratedDepth: [Float]?;
+    private var notCalibratedDepth: [Float];
     
-    var pointCloud : [OSPoint]?;
+    var pointCloud : [OSPoint];
     
-    init(image :UIImage, depth: [Float]){
+    required init(image :UIImage, depth: [Float]){
         let size : Int = (Int)(image.size.width) * (Int)(image.size.height)
 
         assert(size == depth.count, "depth frame and image must be equal size");
@@ -54,14 +54,14 @@ class OSBaseFrame : OSContentLoadingProtocol{
         self.pointCloud = [OSPoint](count: size, repeatedValue: OSPoint());
     }
     
-    subscript(row : Int, col : Int) -> OSPoint{
-        get {
-            return (self.pointCloud?[row * self.width + col])!;
-        }
-//        set (newValue) {
-//            self.pointCloud[row * self.width + col] = newValue;
+//    subscript(row : Int, col : Int) -> OSPoint{
+//        get {
+//            return (self.pointCloud[row * self.width + col]);
 //        }
-    }
+////        set (newValue) {
+////            self.pointCloud[row * self.width + col] = newValue;
+////        }
+//    }
     
 //MARK: Metal
     
@@ -87,7 +87,7 @@ class OSBaseFrame : OSContentLoadingProtocol{
         self.computeCommandEncoder?.setComputePipelineState(OSBaseFrame.metalComputePipelineState!);
         
         //pass the data to GPU
-        let dataSize : Int = self.notCalibratedDepth!.count//self.height * self.width;
+        let dataSize : Int = self.notCalibratedDepth.count//self.height * self.width;
 
         let inputByteLength = dataSize * sizeof(Float);
         let inVectorBuffer = OSBaseFrame.device.newBufferWithBytes(&self.notCalibratedDepth, length: inputByteLength, options:[]);
@@ -106,8 +106,8 @@ class OSBaseFrame : OSContentLoadingProtocol{
         
         self.computeCommandEncoder?.endEncoding();
         
-        self.commandBuffer?.addCompletedHandler({[unowned self] (commandBuffer : MTLCommandBuffer) -> Void in
-            let data = NSData(bytesNoCopy: outputBuffer.contents(), length: (self.pointCloud?.count)! * sizeof(OSPoint), freeWhenDone: false);
+        self.commandBuffer?.addCompletedHandler({ (commandBuffer : MTLCommandBuffer) -> Void in
+            let data = NSData(bytesNoCopy: outputBuffer.contents(), length: (self.pointCloud.count) * sizeof(OSPoint), freeWhenDone: false);
             data.getBytes(&self.pointCloud, length: outputByteLength);
             
             let elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;

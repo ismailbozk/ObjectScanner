@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8152.3" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8124.4"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Opening View Controller-->
@@ -16,26 +18,38 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Vdx-qh-gOy">
-                                <rect key="frame" x="0.0" y="20" width="320" height="548"/>
-                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pLj-iH-P0I">
+                                <rect key="frame" x="99" y="255" width="122" height="58"/>
+                                <color key="backgroundColor" red="0.81568627449999997" green="0.70588235290000001" blue="0.2470588235" alpha="1" colorSpace="calibratedRGB"/>
+                                <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
+                                <state key="normal" title="Start Scanning"/>
+                                <connections>
+                                    <action selector="startScanning:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vHY-p6-UGY"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Vdx-qh-gOy" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="2fs-F1-CAa"/>
-                            <constraint firstAttribute="trailing" secondItem="Vdx-qh-gOy" secondAttribute="trailing" id="3zM-Rh-5J5"/>
-                            <constraint firstAttribute="bottom" secondItem="Vdx-qh-gOy" secondAttribute="bottom" id="e6c-L7-TE0"/>
-                            <constraint firstItem="Vdx-qh-gOy" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="wwe-Fy-Vr6"/>
+                            <constraint firstItem="pLj-iH-P0I" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="1uN-6n-cx3"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="pLj-iH-P0I" secondAttribute="bottom" constant="20" id="HOg-en-dhx"/>
+                            <constraint firstItem="pLj-iH-P0I" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Lpj-Bh-9uS"/>
+                            <constraint firstItem="pLj-iH-P0I" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="UBN-2H-SSf"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="1uN-6n-cx3"/>
+                                <exclude reference="HOg-en-dhx"/>
+                            </mask>
+                        </variation>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
-                        <outlet property="imageView" destination="Vdx-qh-gOy" id="Mtf-j0-eeo"/>
+                        <outlet property="startScanningButton" destination="pLj-iH-P0I" id="Bzg-dQ-2nb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="119" y="319"/>
+            <point key="canvasLocation" x="54" y="312"/>
         </scene>
     </scenes>
 </document>

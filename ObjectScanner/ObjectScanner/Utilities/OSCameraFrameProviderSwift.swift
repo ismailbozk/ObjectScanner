@@ -51,7 +51,7 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
 // MARK: Publics
     
     override func prepareFramesWithCompletion(completion: (() -> Void)!) {
-        super.prepareFramesWithCompletion({[unowned self] () -> Void in
+        super.prepareFramesWithCompletion({ () -> Void in
             let startTime = CACurrentMediaTime();
 
             self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("father1"));
@@ -72,7 +72,7 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
     
     func startSimulatingFrameCaptures() {
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), { () -> Void in
-            self.broadcastFrameAtIndex(0, toIndex: self.images!.count - 1, completion: nil);
+            self.broadcastFrameAtIndex(0, toIndex: self.depthFrames.count - 1, completion: nil);
         });
     }
     

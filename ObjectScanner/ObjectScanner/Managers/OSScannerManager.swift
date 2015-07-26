@@ -29,7 +29,7 @@ class OSScannerManager : OS3DFrameConsumerProtocol
     
     private let calibrationSemaphore : dispatch_semaphore_t = dispatch_semaphore_create(1);
     private let featureExtractionSemaphore : dispatch_semaphore_t = dispatch_semaphore_create(1);
-    private let threadSafeConcurrentFrameArrayConcurrentQueue : dispatch_queue_t = dispatch_queue_create("OSScannerManagerThreadSafeConcurrentFrameArrayConcurrentQueue", DISPATCH_QUEUE_CONCURRENT);//don't use that queue anywhere else other than custom getters and setters for concurrentFrameArray property.
+    private let threadSafeConcurrentFrameArrayConcurrentQueue : dispatch_queue_t = dispatch_queue_create("OSScannerManagerThreadSafeConcurrentFrameArrayConcurrentQueue", DISPATCH_QUEUE_CONCURRENT);//don't use that queue anywhere else other than custom getters and setters for consecutiveFrames property.
     private var consecutiveFrames : [OSBaseFrame] = [OSBaseFrame]();
 
 // MARK: Custom concurrentFrameArray Getter/Setters
@@ -96,27 +96,34 @@ class OSScannerManager : OS3DFrameConsumerProtocol
     @param frame the frame that will be calibrated and put into the scanning process
     @abstract this methd is consist of single frame calibration and image surf feature extractions
     */
-    func startSingleFrameOperations(frame : OSBaseFrame)
+    private func startSingleFrameOperations(frame : OSBaseFrame)
     {
         // calibrating the frame
         dispatch_semaphore_wait(self.calibrationSemaphore, DISPATCH_TIME_FOREVER);
+        OSTimer.tic();
+        frame.preparePointCloud { () -> Void in
+            OSTimer.toc("frame calibrated and converted into 3D space");
+            dispatch_semaphore_signal(self.calibrationSemaphore);
+            self.appendFrame(frame);
+        };
         
-        dispatch_semaphore_signal(self.calibrationSemaphore);
-        
-        // image feature extracting and
+        // image feature extracting
         dispatch_semaphore_wait(self.featureExtractionSemaphore, DISPATCH_TIME_FOREVER)
         
         dispatch_semaphore_signal(self.featureExtractionSemaphore);
     }
     
-    func startConsecutiveFrameOperations()
+    /**
+    @abstract this method will process the consecutive frames
+    */
+    private func startConsecutiveFrameOperations()
     {
         
     }
     
 // MARK: Privates
     
-    func startLoadingContent()
+    private func startLoadingContent()
     {
         OSTimer.tic();
         self.state = .ContentLoading;
@@ -132,7 +139,7 @@ class OSScannerManager : OS3DFrameConsumerProtocol
             dispatch_group_leave(contentLoadingGroup);
         };
         
-        dispatch_group_notify(contentLoadingGroup, dispatch_get_main_queue()) {[unowned self] () -> Void in
+        dispatch_group_notify(contentLoadingGroup, dispatch_get_main_queue()) { () -> Void in
             OSTimer.toc("content loaded");
             self.state = .ContentLoaded;
         };
@@ -143,7 +150,9 @@ class OSScannerManager : OS3DFrameConsumerProtocol
 // MARK: OS3DFrameConsumerProtocol
     func didCapturedFrame(image: UIImage, depthFrame: [Float])
     {
-        var capturedFrame : OSBaseFrame = OSBaseFrame(image: image, depth: depthFrame);
-        self.startSingleFrameOperations(capturedFrame);
+        let capturedFrame : OSBaseFrame = OSBaseFrame(image: image, depth: depthFrame);
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0)) { () -> Void in
+            self.startSingleFrameOperations(capturedFrame);
+        };
     }
 }

@@ -11,7 +11,7 @@ import UIKit
 class OSOpeningViewController: OSViewController {
     
 // MARK: Variables
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var startScanningButton: UIButton!
     
 // MARK: Lifecycle
     
@@ -27,7 +27,10 @@ class OSOpeningViewController: OSViewController {
         {
             self.startLoading();
         }
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:Selector("scannerManagerDidStartLoadingContent"), name: OSScannerManagerState.ContentLoading.rawValue, object: nil);
+        else
+        {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector:Selector("scannerManagerDidStartLoadingContent"), name: OSScannerManagerState.ContentLoading.rawValue, object: nil);
+        }
         NSNotificationCenter.defaultCenter().addObserver(self, selector:Selector("scannerManagerStatusDidLoadContent"), name: OSScannerManagerState.ContentLoaded.rawValue, object: nil);
     }
 
@@ -35,6 +38,12 @@ class OSOpeningViewController: OSViewController {
         super.viewDidAppear(animated);
         NSNotificationCenter.defaultCenter().removeObserver(self, name: OSScannerManagerState.ContentLoading.rawValue, object: nil);
         NSNotificationCenter.defaultCenter().removeObserver(self, name: OSScannerManagerState.ContentLoaded.rawValue, object: nil);
+    }
+    
+// MARK: Actions
+    @IBAction func startScanning(sender: AnyObject)
+    {
+        OSScannerManager.sharedInstance.startSimulating();
     }
     
 // MARK: OSScannerManager Utilities
