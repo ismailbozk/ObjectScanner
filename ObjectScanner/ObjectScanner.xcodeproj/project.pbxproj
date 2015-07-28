@@ -16,6 +16,8 @@
 		4626895E1B5B9AB200CFA891 /* OSViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4626895D1B5B9AB200CFA891 /* OSViewController.swift */; };
 		462689601B5BA2B100CFA891 /* OS3DFrameConsumerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4626895F1B5BA2B100CFA891 /* OS3DFrameConsumerProtocol.swift */; };
 		462689621B5BAE5000CFA891 /* OSOpeningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462689611B5BAE5000CFA891 /* OSOpeningViewController.swift */; };
+		464B51B91B67897C00A99117 /* UIImage+OpenCV.mm in Sources */ = {isa = PBXBuildFile; fileRef = 464B51B81B67897C00A99117 /* UIImage+OpenCV.mm */; settings = {COMPILER_FLAGS = "-x objective-c++"; }; };
+		464B51C11B679AEF00A99117 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 464B51B41B67893A00A99117 /* opencv2.framework */; };
 		467344471B5A735B009B3728 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 467344461B5A735B009B3728 /* main.m */; };
 		4673444A1B5A735B009B3728 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 467344491B5A735B009B3728 /* AppDelegate.m */; };
 		467344501B5A735B009B3728 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4673444E1B5A735B009B3728 /* Main.storyboard */; };
@@ -61,6 +63,9 @@
 		4626895D1B5B9AB200CFA891 /* OSViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSViewController.swift; sourceTree = "<group>"; };
 		4626895F1B5BA2B100CFA891 /* OS3DFrameConsumerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OS3DFrameConsumerProtocol.swift; sourceTree = "<group>"; };
 		462689611B5BAE5000CFA891 /* OSOpeningViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSOpeningViewController.swift; sourceTree = "<group>"; };
+		464B51B41B67893A00A99117 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		464B51B71B67897C00A99117 /* UIImage+OpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+OpenCV.h"; sourceTree = "<group>"; };
+		464B51B81B67897C00A99117 /* UIImage+OpenCV.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "UIImage+OpenCV.mm"; sourceTree = "<group>"; };
 		467344411B5A735B009B3728 /* ObjectScanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjectScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		467344451B5A735B009B3728 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		467344461B5A735B009B3728 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -98,6 +103,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				464B51C11B679AEF00A99117 /* opencv2.framework in Frameworks */,
 				4626894E1B5AA45700CFA891 /* CoreGraphics.framework in Frameworks */,
 				4626894C1B5AA44D00CFA891 /* UIKit.framework in Frameworks */,
 				462689491B5AA26300CFA891 /* QuartzCore.framework in Frameworks */,
@@ -118,13 +124,23 @@
 		462689451B5AA24600CFA891 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				464B51B41B67893A00A99117 /* opencv2.framework */,
 				4626894D1B5AA45700CFA891 /* CoreGraphics.framework */,
 				4626894B1B5AA44D00CFA891 /* UIKit.framework */,
 				462689481B5AA26300CFA891 /* QuartzCore.framework */,
 				462689461B5AA25A00CFA891 /* Metal.framework */,
 			);
 			name = Frameworks;
-			path = ObjectScanner;
+			path = ObjectScanner/Frameworks;
+			sourceTree = "<group>";
+		};
+		464B51B61B67894D00A99117 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				464B51B71B67897C00A99117 /* UIImage+OpenCV.h */,
+				464B51B81B67897C00A99117 /* UIImage+OpenCV.mm */,
+			);
+			path = Categories;
 			sourceTree = "<group>";
 		};
 		467344381B5A735B009B3728 = {
@@ -157,6 +173,7 @@
 				4673446F1B5A73DC009B3728 /* Models */,
 				46F806BB1B63F3C800A15A40 /* Managers */,
 				4673446E1B5A73BA009B3728 /* Utilities */,
+				464B51B61B67894D00A99117 /* Categories */,
 				467344761B5A75D2009B3728 /* Resources */,
 				467344441B5A735B009B3728 /* Supporting Files */,
 			);
@@ -375,6 +392,7 @@
 				4626895A1B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift in Sources */,
 				46F806BD1B63F44000A15A40 /* OSScannerManager.swift in Sources */,
 				462689571B5B7C7200CFA891 /* OSBaseFrame.swift in Sources */,
+				464B51B91B67897C00A99117 /* UIImage+OpenCV.mm in Sources */,
 				4673446D1B5A73AD009B3728 /* ViewController.m in Sources */,
 				467344471B5A735B009B3728 /* main.m in Sources */,
 				4626895E1B5B9AB200CFA891 /* OSViewController.swift in Sources */,
@@ -446,6 +464,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -491,6 +510,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -515,11 +535,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				EXECUTABLE_PREFIX = "";
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/ObjectScanner/Frameworks/**";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/ObjectScanner/OS-Prefix.pch";
 				INFOPLIST_FILE = ObjectScanner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"<Multiple",
+					"values>",
+					"$(PROJECT_DIR)/ObjectScanner/Frameworks/**",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ObjectScanner/ObjectScanner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -532,11 +558,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				EXECUTABLE_PREFIX = "";
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/ObjectScanner/Frameworks/**";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/ObjectScanner/OS-Prefix.pch";
 				INFOPLIST_FILE = ObjectScanner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"<Multiple",
+					"values>",
+					"$(PROJECT_DIR)/ObjectScanner/Frameworks/**",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ObjectScanner/ObjectScanner-Bridging-Header.h";
 			};

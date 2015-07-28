@@ -28,6 +28,26 @@ kernel void calibrateFrame(const constant float *depthValues [[buffer(0)]],
                            const constant float4x4 &calibrationMatrix [[buffer(2)]],
                            const uint id [[thread_position_in_grid]])
 {
+//    switch (id)
+//    {
+//    case 0:
+//            outputPointCloud[id] = float4(calibrationMatrix[0][0], calibrationMatrix[0][1], calibrationMatrix[0][2], calibrationMatrix[0][3]);
+//        break;
+//    case 1:
+//            outputPointCloud[id] = float4(calibrationMatrix[1][0], calibrationMatrix[1][1], calibrationMatrix[1][2], calibrationMatrix[1][3]);
+//        break;
+//    case 2:
+//            outputPointCloud[id] = float4(calibrationMatrix[2][0], calibrationMatrix[2][1], calibrationMatrix[2][2], calibrationMatrix[2][3]);
+//        break;
+//    case 3:
+//            outputPointCloud[id] = float4(calibrationMatrix[3][0], calibrationMatrix[3][1], calibrationMatrix[3][2], calibrationMatrix[3][3]);
+//        break;
+//    default:
+//        outputPointCloud[id] = calibrationMatrix * float4(0, -1, 0 ,1);
+//        break;
+//    }
+    
+    
     if (depthValues[id] > 1.f) //if the depth value is valid
     {
         //coordinates on depth frame
