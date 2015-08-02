@@ -37,6 +37,8 @@ class OSPointCloudView: UIView {
     
     private var vertexBuffer: MTLBuffer?;
     private var uniformBuffer: MTLBuffer?;
+    private var textureBuffer: MTLTexture?;
+    
     private var uniforms: Uniforms = Uniforms();
 
     private var vertices: [OSPoint]?;
@@ -141,6 +143,10 @@ class OSPointCloudView: UIView {
             
           
             renderEncoder.setVertexBuffer(self.uniformBuffer, offset: 0, atIndex: 1);
+            
+//            renderEncoder.setFragmentTexture(self.textureBuffer, atIndex: 0);
+            renderEncoder.setVertexTexture(self.textureBuffer, atIndex: 0);
+            
             renderEncoder.drawPrimitives(MTLPrimitiveType.Point, vertexStart: 0, vertexCount: (self.vertices?.count)!);
             renderEncoder.endEncoding();
             
@@ -190,10 +196,12 @@ class OSPointCloudView: UIView {
     
 // MARK: Publics
     
-    func setVertices(vertices : [OSPoint])
+    func setOSFrame(frame : OSBaseFrame)
     {
-        self.vertices = vertices;
-        self.vertexBuffer = OSPointCloudView.device.newBufferWithBytes(vertices, length: vertices.count * sizeof(OSPoint), options: []);
+        self.vertices = frame.pointCloud;
+        self.vertexBuffer = OSPointCloudView.device.newBufferWithBytes(self.vertices!, length: self.vertices!.count * sizeof(OSPoint), options: []);
+        
+        self.textureBuffer = OSTextureProvider.textureWithImage(frame.image, device: OSPointCloudView.device);
         
         
         self.isReadForAction = true;

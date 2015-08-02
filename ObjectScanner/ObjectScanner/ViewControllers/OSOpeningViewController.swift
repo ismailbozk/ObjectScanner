@@ -51,6 +51,6 @@ class OSOpeningViewController: OSViewController, OSScannerManagerDelegate {
     
     func scannerManagerDidPreparedFrame(scannerManager: OSScannerManager, frame: OSBaseFrame)
     {
-        self.pointCloudView.setVertices(frame.pointCloud);
+        self.pointCloudView.setOSFrame(frame);
     }
 }

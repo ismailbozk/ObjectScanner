@@ -22,6 +22,7 @@ struct Uniforms{
 
 vertex VertexOut pointCloudVertex (const device float4 *vertices [[buffer (0)]],
                                    const device Uniforms &uniforms [[buffer (1)]],
+                                   texture2d<float, access::read>  inTexture   [[ texture(0) ]],
                                    unsigned int vid [[ vertex_id ]])
 {
     float4x4 mv_Matrix = uniforms.modelMatrix;
@@ -48,23 +49,27 @@ vertex VertexOut pointCloudVertex (const device float4 *vertices [[buffer (0)]],
     vertexOut.position.z /= 4;
     
     
-    if (vertexPoint.x < 1.f ||
-        vertexPoint.y < 1.f ||
-        vertexPoint.z < 1.f )
-    {
-        vertexOut.color = float4(1.f, 1.f, 1.f, 0.f);
-    }
-    else
-    {
-        vertexOut.color = float4(1.f, 1.f, 1.f, 1.f);
-    }
+//    if (vertexPoint.x < 1.f ||
+//        vertexPoint.y < 1.f ||
+//        vertexPoint.z < 1.f )
+//    {
+//        vertexOut.color = float4(0.5f, 0.5f, 0.5f, 1.f);
+//    }
+//    else
+//    {
+        uint2 gid;
+        gid.x = vid % inTexture.get_width();
+        gid.y = vid / inTexture.get_width();
+        vertexOut.color = inTexture.read(gid);
+//    }
         
     vertexOut.pointSize = 1.f;
     
     return vertexOut;
 }
 
-fragment half4 pointCloudFragment (VertexOut interpolated [[stage_in]])
+fragment float4 pointCloudFragment (VertexOut interpolated [[stage_in]])
 {
-    return half4(interpolated.color[0], interpolated.color[1], interpolated.color[2], interpolated.color[3]);
+    return interpolated.color;
+    return float4(interpolated.color[0], interpolated.color[1], interpolated.color[2], interpolated.color[3]);
 }

@@ -34,6 +34,7 @@
 		4673448C1B5A76DB009B3728 /* father5Depth.csv in Resources */ = {isa = PBXBuildFile; fileRef = 467344821B5A76DB009B3728 /* father5Depth.csv */; };
 		467925CC1B63A6C80037D04D /* OSContentLoadingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467925CB1B63A6C80037D04D /* OSContentLoadingProtocol.swift */; };
 		468078B71B6E67BE003484F4 /* OSVectorMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468078B61B6E67BE003484F4 /* OSVectorMath.swift */; };
+		468078BA1B6EA2E7003484F4 /* OSTextureProvider.mm in Sources */ = {isa = PBXBuildFile; fileRef = 468078B91B6EA2E7003484F4 /* OSTextureProvider.mm */; };
 		46B005751B5BDCC000AE781D /* father1.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005701B5BDCC000AE781D /* father1.png */; };
 		46B005761B5BDCC000AE781D /* father2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005711B5BDCC000AE781D /* father2.png */; };
 		46B005771B5BDCC000AE781D /* father3.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005721B5BDCC000AE781D /* father3.png */; };
@@ -91,6 +92,8 @@
 		4673448F1B5A7BB2009B3728 /* OS-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OS-Prefix.pch"; sourceTree = "<group>"; };
 		467925CB1B63A6C80037D04D /* OSContentLoadingProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSContentLoadingProtocol.swift; sourceTree = "<group>"; };
 		468078B61B6E67BE003484F4 /* OSVectorMath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSVectorMath.swift; sourceTree = "<group>"; };
+		468078B81B6EA2E7003484F4 /* OSTextureProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSTextureProvider.h; sourceTree = "<group>"; };
+		468078B91B6EA2E7003484F4 /* OSTextureProvider.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSTextureProvider.mm; sourceTree = "<group>"; };
 		46B005701B5BDCC000AE781D /* father1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father1.png; sourceTree = "<group>"; };
 		46B005711B5BDCC000AE781D /* father2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father2.png; sourceTree = "<group>"; };
 		46B005721B5BDCC000AE781D /* father3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father3.png; sourceTree = "<group>"; };
@@ -231,6 +234,8 @@
 				4626895F1B5BA2B100CFA891 /* OS3DFrameConsumerProtocol.swift */,
 				46BB660D1B5FA0BE001897AD /* OSTimer.swift */,
 				467925CB1B63A6C80037D04D /* OSContentLoadingProtocol.swift */,
+				468078B81B6EA2E7003484F4 /* OSTextureProvider.h */,
+				468078B91B6EA2E7003484F4 /* OSTextureProvider.mm */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -421,6 +426,7 @@
 				467344751B5A74F8009B3728 /* OSCameraFrameProvider.m in Sources */,
 				464454671B6D3FFE00653213 /* OSPointCloudView.swift in Sources */,
 				462689601B5BA2B100CFA891 /* OS3DFrameConsumerProtocol.swift in Sources */,
+				468078BA1B6EA2E7003484F4 /* OSTextureProvider.mm in Sources */,
 				46B0057D1B5BFF4F00AE781D /* RGBDepthFrame.metal in Sources */,
 				468078B71B6E67BE003484F4 /* OSVectorMath.swift in Sources */,
 				464454691B6E33AF00653213 /* PointCloudShader.metal in Sources */,
