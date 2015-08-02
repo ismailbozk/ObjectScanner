@@ -15,9 +15,15 @@ enum OSScannerManagerState: String
     case ScanCompleted = "OSScannerManagerScanCompleted"
 }
 
+protocol OSScannerManagerDelegate : class
+{
+    func scannerManagerDidPreparedFrame(scannerManager: OSScannerManager, frame: OSBaseFrame) -> Void;
+}
+
 class OSScannerManager : OS3DFrameConsumerProtocol
 {
 // MARK: Properties
+    weak var delegate : OSScannerManagerDelegate?;
     var state : OSScannerManagerState = .Idle {
         didSet
         {
@@ -105,6 +111,8 @@ class OSScannerManager : OS3DFrameConsumerProtocol
             OSTimer.toc("frame calibrated and converted into 3D space");
             dispatch_semaphore_signal(self.calibrationSemaphore);
             self.appendFrame(frame);
+            
+            self.delegate?.scannerManagerDidPreparedFrame(self, frame: frame);
         };
         
         // image feature extracting
