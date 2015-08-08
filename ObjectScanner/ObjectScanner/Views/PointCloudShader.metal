@@ -16,7 +16,7 @@ struct VertexOut {
 };
 
 struct Uniforms{
-    float4x4 modelMatrix;
+    float4x4 viewMatrix;
     float4x4 projectionMatrix;
 };
 
@@ -25,45 +25,37 @@ vertex VertexOut pointCloudVertex (const device float4 *vertices [[buffer (0)]],
                                    texture2d<float, access::read>  inTexture   [[ texture(0) ]],
                                    unsigned int vid [[ vertex_id ]])
 {
-    float4x4 mv_Matrix = uniforms.modelMatrix;
-    float4x4 proj_Matrix = uniforms.projectionMatrix;
-    
     float4 vertexPoint = vertices[vid];
     
     VertexOut vertexOut;
-    
-    vertexPoint.z -= .5f;
 
-//    float4x4 cameraPostionFixMatrix = float4x4(1.f);
-//    cameraPostionFixMatrix[2][3] = -2.f;
-//    
-//    vertexPoint = cameraPostionFixMatrix * vertexPoint;
-    
-    vertexOut.position = uniforms.projectionMatrix * vertexPoint;
-//    vertexOut.position = proj_Matrix * mv_Matrix * vertexPoint;
+    // Point Cloud registration
     
     
+    // Rotate the pointcloud
+    vertexPoint.z -= 2.f;//center point should be near 0.0 point
+    vertexPoint = uniforms.viewMatrix * vertexPoint;
+    vertexPoint.z += 2.f;
     
-    vertexOut.position.x /= 4;
-    vertexOut.position.y /= 4;
-    vertexOut.position.z /= 4;
+    // put it into clip space
+    vertexPoint.x = - vertexPoint.x;
+    vertexPoint.y = - vertexPoint.y;
+    vertexPoint.z = - vertexPoint.z;
+    vertexPoint = uniforms.projectionMatrix * vertexPoint;
+    vertexPoint.x /= 4;
+    vertexPoint.y /= 4;
+    vertexPoint.z /= 4;
     
+    vertexOut.position = vertexPoint;
+
+    // setting the color of the points
+    uint2 gid;
+    gid.x = vid % inTexture.get_width();
+    gid.y = vid / inTexture.get_width();
+    vertexOut.color = inTexture.read(gid);
     
-//    if (vertexPoint.x < 1.f ||
-//        vertexPoint.y < 1.f ||
-//        vertexPoint.z < 1.f )
-//    {
-//        vertexOut.color = float4(0.5f, 0.5f, 0.5f, 1.f);
-//    }
-//    else
-//    {
-        uint2 gid;
-        gid.x = vid % inTexture.get_width();
-        gid.y = vid / inTexture.get_width();
-        vertexOut.color = inTexture.read(gid);
-//    }
-        
-    vertexOut.pointSize = 1.f;
+    // Set the point size in the space
+    vertexOut.pointSize = 0.5f;// currently for only @2x retina screens.
     
     return vertexOut;
 }

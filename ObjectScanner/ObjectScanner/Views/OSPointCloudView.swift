@@ -9,7 +9,7 @@
 import UIKit
 
 struct Uniforms {
-    var modelMatrix : Matrix4 = Matrix4.Identity;
+    var viewMatrix : Matrix4 = Matrix4.Identity;
     var projectionMatrix : Matrix4 = Matrix4.Identity;
 }
 
@@ -123,25 +123,27 @@ class OSPointCloudView: UIView {
             let commandBuffer = commandQueue.commandBuffer();
             
             let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor);
+            renderEncoder.setFrontFacingWinding(MTLWinding.CounterClockwise)
             renderEncoder.setCullMode(MTLCullMode.Front);
             
             renderEncoder.setRenderPipelineState(pipelineState);
             
+//            MTLDepthStencilDescriptor *depthStencilDescriptor = [MTLDepthStencilDescriptor new];
+            var depthStencilDescriptor: MTLDepthStencilDescriptor = MTLDepthStencilDescriptor();
+//            depthStencilDescriptor.depthCompareFunction = MTLCompareFunctionLess;
+            depthStencilDescriptor.depthCompareFunction = MTLCompareFunction.Less;
+            
+//            depthStencilDescriptor.depthWriteEnabled = YES;
+            depthStencilDescriptor.depthWriteEnabled = true;
+            
+//            self.depthStencilState = [self.device newDepthStencilStateWithDescriptor:depthStencilDescriptor];
+            var depthStencilState = OSPointCloudView.device.newDepthStencilStateWithDescriptor(depthStencilDescriptor);
+            
             renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, atIndex: 0);
+            
+            
+            renderEncoder .setDepthStencilState(depthStencilState);
 
-
-            
-//            self.uniformBuffer = OSPointCloudView.device.newBufferWithLength(sizeof(Uniforms), options: MTLResourceOptions.CPUCacheModeDefaultCache);
-//            
-//            let bufferPointer = uniformBuffer?.contents();
-//            
-//            memcpy(bufferPointer!, &self.uniforms, sizeof(Uniforms));
-            
-
-            
-            
-            
-          
             renderEncoder.setVertexBuffer(self.uniformBuffer, offset: 0, atIndex: 1);
             
 //            renderEncoder.setFragmentTexture(self.textureBuffer, atIndex: 0);
@@ -149,6 +151,7 @@ class OSPointCloudView: UIView {
             
             renderEncoder.drawPrimitives(MTLPrimitiveType.Point, vertexStart: 0, vertexCount: (self.vertices?.count)!);
             renderEncoder.endEncoding();
+            
             
             commandBuffer.presentDrawable(drawable);
             commandBuffer.commit()
@@ -170,23 +173,20 @@ class OSPointCloudView: UIView {
     
     private func updateUniforms()
     {
-        var modelMatrix = Matrix4.Identity;
-        modelMatrix = Matrix4.rotation(axis: kOSPointCloudViewYAxis, angle: Scalar(self.angle.x)) * modelMatrix;
-        modelMatrix = Matrix4.rotation(axis: kOSPointCloudViewXAxis, angle: Scalar(self.angle.y)) * modelMatrix;
-        
         var viewMatrix = Matrix4.Identity;
-        viewMatrix.m43 = -1.0;  // translate camera back along Z axis
+        
+        viewMatrix = Matrix4.rotation(axis: kOSPointCloudViewYAxis, angle: Scalar(self.angle.x)) * viewMatrix;
+        viewMatrix = Matrix4.rotation(axis: kOSPointCloudViewXAxis, angle: Scalar(self.angle.y)) * viewMatrix;
         
         let near: Float = 0.1;
         let far: Float = 100.0;
         let aspect: Float = Float(self.bounds.size.width / self.bounds.size.height);
-        let projectionMatrix = Matrix4.perspectiveProjection(aspect: aspect, fovy: Float.degToRad(75.0), near: near, far: far);
+        let projectionMatrix = Matrix4.perspectiveProjection(aspect: aspect, fovy: Float.degToRad(95.0), near: near, far: far);
         
         var uniforms: Uniforms = Uniforms();
-        let modelView = viewMatrix * modelMatrix;
-        uniforms.modelMatrix = modelView;
+        uniforms.viewMatrix = viewMatrix;
         
-        let modelViewProj: Matrix4 = projectionMatrix * modelMatrix;
+        let modelViewProj: Matrix4 = projectionMatrix
         uniforms.projectionMatrix = modelViewProj;
         
         self.uniforms = uniforms;
