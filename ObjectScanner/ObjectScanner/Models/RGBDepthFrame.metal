@@ -49,7 +49,7 @@ kernel void calibrateFrame(const constant float *depthValues [[buffer(0)]],
         float invZ = 1.f / tempPoint.z;
         
         x = ((tempPoint.x * fx_rgb * invZ) + cx_rgb) + 3.0f;//+3 and + 14.7 are just minor tuning values, have no meaning other than that.
-        y = ((tempPoint.y * fy_rgb * invZ) + cy_rgb) + 14.7f;
+        y = ((tempPoint.y * fy_rgb * invZ) + cy_rgb) - 14.7f;
         
         //the 3D points will be stored as y * width + x on 1D array.
         if (x < width
