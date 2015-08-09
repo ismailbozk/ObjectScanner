@@ -4,3 +4,4 @@
 
 #import "OSCameraFrameProvider.h"
 #import "ViewController.h"
+#import "OSTextureProvider.h"

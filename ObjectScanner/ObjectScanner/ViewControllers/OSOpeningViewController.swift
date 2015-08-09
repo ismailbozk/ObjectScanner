@@ -8,16 +8,17 @@
 
 import UIKit
 
-class OSOpeningViewController: OSViewController {
+class OSOpeningViewController: OSViewController, OSScannerManagerDelegate {
     
 // MARK: Variables
     @IBOutlet weak var startScanningButton: UIButton!
     
+    @IBOutlet weak var pointCloudView: OSPointCloudView!
 // MARK: Lifecycle
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
-
+        OSScannerManager.sharedInstance.delegate = self;
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -44,5 +45,12 @@ class OSOpeningViewController: OSViewController {
     func scannerManagerStatusDidLoadContent()
     {
         self.stopLoading();
+    }
+    
+// MARK: OSScannerManagerDelegate
+    
+    func scannerManagerDidPreparedFrame(scannerManager: OSScannerManager, frame: OSBaseFrame)
+    {
+        self.pointCloudView.appendFrame(frame);
     }
 }

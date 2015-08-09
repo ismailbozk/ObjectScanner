@@ -18,6 +18,9 @@
 		462689621B5BAE5000CFA891 /* OSOpeningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462689611B5BAE5000CFA891 /* OSOpeningViewController.swift */; };
 		464B51B91B67897C00A99117 /* UIImage+OpenCV.mm in Sources */ = {isa = PBXBuildFile; fileRef = 464B51B81B67897C00A99117 /* UIImage+OpenCV.mm */; settings = {COMPILER_FLAGS = "-x objective-c++"; }; };
 		464B51C11B679AEF00A99117 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 464B51B41B67893A00A99117 /* opencv2.framework */; };
+		464454641B6CE1D100653213 /* VectorMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464454631B6CE1D100653213 /* VectorMath.swift */; };
+		464454671B6D3FFE00653213 /* OSPointCloudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464454661B6D3FFE00653213 /* OSPointCloudView.swift */; };
+		464454691B6E33AF00653213 /* PointCloudShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 464454681B6E33AF00653213 /* PointCloudShader.metal */; };
 		467344471B5A735B009B3728 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 467344461B5A735B009B3728 /* main.m */; };
 		4673444A1B5A735B009B3728 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 467344491B5A735B009B3728 /* AppDelegate.m */; };
 		467344501B5A735B009B3728 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4673444E1B5A735B009B3728 /* Main.storyboard */; };
@@ -32,6 +35,8 @@
 		4673448A1B5A76DB009B3728 /* father4Depth.csv in Resources */ = {isa = PBXBuildFile; fileRef = 467344801B5A76DB009B3728 /* father4Depth.csv */; };
 		4673448C1B5A76DB009B3728 /* father5Depth.csv in Resources */ = {isa = PBXBuildFile; fileRef = 467344821B5A76DB009B3728 /* father5Depth.csv */; };
 		467925CC1B63A6C80037D04D /* OSContentLoadingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467925CB1B63A6C80037D04D /* OSContentLoadingProtocol.swift */; };
+		468078B71B6E67BE003484F4 /* OSVectorMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468078B61B6E67BE003484F4 /* OSVectorMath.swift */; };
+		468078BA1B6EA2E7003484F4 /* OSTextureProvider.mm in Sources */ = {isa = PBXBuildFile; fileRef = 468078B91B6EA2E7003484F4 /* OSTextureProvider.mm */; };
 		46B005751B5BDCC000AE781D /* father1.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005701B5BDCC000AE781D /* father1.png */; };
 		46B005761B5BDCC000AE781D /* father2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005711B5BDCC000AE781D /* father2.png */; };
 		46B005771B5BDCC000AE781D /* father3.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005721B5BDCC000AE781D /* father3.png */; };
@@ -66,6 +71,9 @@
 		464B51B41B67893A00A99117 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		464B51B71B67897C00A99117 /* UIImage+OpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+OpenCV.h"; sourceTree = "<group>"; };
 		464B51B81B67897C00A99117 /* UIImage+OpenCV.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "UIImage+OpenCV.mm"; sourceTree = "<group>"; };
+		464454631B6CE1D100653213 /* VectorMath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VectorMath.swift; sourceTree = "<group>"; };
+		464454661B6D3FFE00653213 /* OSPointCloudView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSPointCloudView.swift; sourceTree = "<group>"; };
+		464454681B6E33AF00653213 /* PointCloudShader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = PointCloudShader.metal; sourceTree = "<group>"; };
 		467344411B5A735B009B3728 /* ObjectScanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjectScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		467344451B5A735B009B3728 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		467344461B5A735B009B3728 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -87,7 +95,11 @@
 		467344801B5A76DB009B3728 /* father4Depth.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father4Depth.csv; sourceTree = "<group>"; };
 		467344821B5A76DB009B3728 /* father5Depth.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father5Depth.csv; sourceTree = "<group>"; };
 		4673448F1B5A7BB2009B3728 /* OS-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OS-Prefix.pch"; sourceTree = "<group>"; };
+		4677958F1B772A5000F36942 /* Shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shared.h; sourceTree = "<group>"; };
 		467925CB1B63A6C80037D04D /* OSContentLoadingProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSContentLoadingProtocol.swift; sourceTree = "<group>"; };
+		468078B61B6E67BE003484F4 /* OSVectorMath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSVectorMath.swift; sourceTree = "<group>"; };
+		468078B81B6EA2E7003484F4 /* OSTextureProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSTextureProvider.h; sourceTree = "<group>"; };
+		468078B91B6EA2E7003484F4 /* OSTextureProvider.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSTextureProvider.mm; sourceTree = "<group>"; };
 		46B005701B5BDCC000AE781D /* father1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father1.png; sourceTree = "<group>"; };
 		46B005711B5BDCC000AE781D /* father2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father2.png; sourceTree = "<group>"; };
 		46B005721B5BDCC000AE781D /* father3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father3.png; sourceTree = "<group>"; };
@@ -143,6 +155,15 @@
 			path = Categories;
 			sourceTree = "<group>";
 		};
+		464454651B6D3F0600653213 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				464454661B6D3FFE00653213 /* OSPointCloudView.swift */,
+				464454681B6E33AF00653213 /* PointCloudShader.metal */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		467344381B5A735B009B3728 = {
 			isa = PBXGroup;
 			children = (
@@ -165,15 +186,19 @@
 		467344431B5A735B009B3728 /* ObjectScanner */ = {
 			isa = PBXGroup;
 			children = (
+				4677958F1B772A5000F36942 /* Shared.h */,
 				467344481B5A735B009B3728 /* AppDelegate.h */,
 				467344491B5A735B009B3728 /* AppDelegate.m */,
 				4673444E1B5A735B009B3728 /* Main.storyboard */,
 				467344531B5A735B009B3728 /* LaunchScreen.xib */,
 				4673446A1B5A7379009B3728 /* ViewControllers */,
+				464454651B6D3F0600653213 /* Views */,
 				4673446F1B5A73DC009B3728 /* Models */,
 				46F806BB1B63F3C800A15A40 /* Managers */,
 				4673446E1B5A73BA009B3728 /* Utilities */,
 				464B51B61B67894D00A99117 /* Categories */,
+				46D07E241B6CCF2900E7A7BC /* ExternalComponents */,
+				468078B51B6E66D9003484F4 /* Categories */,
 				467344761B5A75D2009B3728 /* Resources */,
 				467344441B5A735B009B3728 /* Supporting Files */,
 			);
@@ -228,6 +253,8 @@
 				4626895F1B5BA2B100CFA891 /* OS3DFrameConsumerProtocol.swift */,
 				46BB660D1B5FA0BE001897AD /* OSTimer.swift */,
 				467925CB1B63A6C80037D04D /* OSContentLoadingProtocol.swift */,
+				468078B81B6EA2E7003484F4 /* OSTextureProvider.h */,
+				468078B91B6EA2E7003484F4 /* OSTextureProvider.mm */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -265,6 +292,22 @@
 				467344821B5A76DB009B3728 /* father5Depth.csv */,
 			);
 			path = TestData;
+			sourceTree = "<group>";
+		};
+		468078B51B6E66D9003484F4 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				468078B61B6E67BE003484F4 /* OSVectorMath.swift */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		46D07E241B6CCF2900E7A7BC /* ExternalComponents */ = {
+			isa = PBXGroup;
+			children = (
+				464454631B6CE1D100653213 /* VectorMath.swift */,
+			);
+			path = ExternalComponents;
 			sourceTree = "<group>";
 		};
 		46F806BB1B63F3C800A15A40 /* Managers */ = {
@@ -322,7 +365,7 @@
 				CLASSPREFIX = OS;
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0640;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Ismail Bozkurt";
 				TargetAttributes = {
 					467344401B5A735B009B3728 = {
@@ -388,6 +431,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				464454641B6CE1D100653213 /* VectorMath.swift in Sources */,
 				4673444A1B5A735B009B3728 /* AppDelegate.m in Sources */,
 				4626895A1B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift in Sources */,
 				46F806BD1B63F44000A15A40 /* OSScannerManager.swift in Sources */,
@@ -400,8 +444,12 @@
 				46BB660E1B5FA0BE001897AD /* OSTimer.swift in Sources */,
 				462689621B5BAE5000CFA891 /* OSOpeningViewController.swift in Sources */,
 				467344751B5A74F8009B3728 /* OSCameraFrameProvider.m in Sources */,
+				464454671B6D3FFE00653213 /* OSPointCloudView.swift in Sources */,
 				462689601B5BA2B100CFA891 /* OS3DFrameConsumerProtocol.swift in Sources */,
+				468078BA1B6EA2E7003484F4 /* OSTextureProvider.mm in Sources */,
 				46B0057D1B5BFF4F00AE781D /* RGBDepthFrame.metal in Sources */,
+				468078B71B6E67BE003484F4 /* OSVectorMath.swift in Sources */,
+				464454691B6E33AF00653213 /* PointCloudShader.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,6 +514,7 @@
 				DEFINES_MODULE = YES;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
