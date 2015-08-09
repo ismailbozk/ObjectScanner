@@ -7,12 +7,11 @@
 //
 
 import UIKit
+import simd
 
 struct OSPoint {
-    var x : Float = 0.0;
-    var y : Float = 0.0;
-    var z : Float = 0.0;
-    var t : Float = 1.0;
+    var point: float4 = float4(0.0);
+    var color: float4 = float4(1.0);
 }
 
 private var calibrationMatrix : [Float] = [9.9984628826577793e-01 , 1.2635359098409581e-03 , -1.7487233004436643e-02, 0,
@@ -89,6 +88,9 @@ class OSBaseFrame : OSContentLoadingProtocol{
         //pass the data to GPU
         let dataSize : Int = self.notCalibratedDepth.count//self.height * self.width;
 
+        let imageTextureBuffer = OSTextureProvider.textureWithImage(self.image, device: OSBaseFrame.device);
+        self.computeCommandEncoder?.setTexture(imageTextureBuffer, atIndex: 0);
+        
         let inputByteLength = dataSize * sizeof(Float);
         let inVectorBuffer = OSBaseFrame.device.newBufferWithBytes(&self.notCalibratedDepth, length: inputByteLength, options:[]);
         self.computeCommandEncoder?.setBuffer(inVectorBuffer, offset: 0, atIndex: 0);

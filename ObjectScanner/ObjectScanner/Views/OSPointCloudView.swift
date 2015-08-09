@@ -37,7 +37,6 @@ class OSPointCloudView: UIView {
     
     private var vertexBuffer: MTLBuffer?;
     private var uniformBuffer: MTLBuffer?;
-    private var textureBuffer: MTLTexture?;
     
     private var uniforms: Uniforms = Uniforms();
 
@@ -128,15 +127,11 @@ class OSPointCloudView: UIView {
             
             renderEncoder.setRenderPipelineState(pipelineState);
             
-//            MTLDepthStencilDescriptor *depthStencilDescriptor = [MTLDepthStencilDescriptor new];
             var depthStencilDescriptor: MTLDepthStencilDescriptor = MTLDepthStencilDescriptor();
-//            depthStencilDescriptor.depthCompareFunction = MTLCompareFunctionLess;
             depthStencilDescriptor.depthCompareFunction = MTLCompareFunction.Less;
             
-//            depthStencilDescriptor.depthWriteEnabled = YES;
             depthStencilDescriptor.depthWriteEnabled = true;
             
-//            self.depthStencilState = [self.device newDepthStencilStateWithDescriptor:depthStencilDescriptor];
             var depthStencilState = OSPointCloudView.device.newDepthStencilStateWithDescriptor(depthStencilDescriptor);
             
             renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, atIndex: 0);
@@ -145,10 +140,7 @@ class OSPointCloudView: UIView {
             renderEncoder .setDepthStencilState(depthStencilState);
 
             renderEncoder.setVertexBuffer(self.uniformBuffer, offset: 0, atIndex: 1);
-            
-//            renderEncoder.setFragmentTexture(self.textureBuffer, atIndex: 0);
-            renderEncoder.setVertexTexture(self.textureBuffer, atIndex: 0);
-            
+                        
             renderEncoder.drawPrimitives(MTLPrimitiveType.Point, vertexStart: 0, vertexCount: (self.vertices?.count)!);
             renderEncoder.endEncoding();
             
@@ -200,9 +192,6 @@ class OSPointCloudView: UIView {
     {
         self.vertices = frame.pointCloud;
         self.vertexBuffer = OSPointCloudView.device.newBufferWithBytes(self.vertices!, length: self.vertices!.count * sizeof(OSPoint), options: []);
-        
-        self.textureBuffer = OSTextureProvider.textureWithImage(frame.image, device: OSPointCloudView.device);
-        
         
         self.isReadForAction = true;
     }

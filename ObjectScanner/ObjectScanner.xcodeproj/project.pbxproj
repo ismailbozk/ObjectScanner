@@ -90,6 +90,7 @@
 		467344801B5A76DB009B3728 /* father4Depth.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father4Depth.csv; sourceTree = "<group>"; };
 		467344821B5A76DB009B3728 /* father5Depth.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = father5Depth.csv; sourceTree = "<group>"; };
 		4673448F1B5A7BB2009B3728 /* OS-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OS-Prefix.pch"; sourceTree = "<group>"; };
+		4677958F1B772A5000F36942 /* Shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shared.h; sourceTree = "<group>"; };
 		467925CB1B63A6C80037D04D /* OSContentLoadingProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSContentLoadingProtocol.swift; sourceTree = "<group>"; };
 		468078B61B6E67BE003484F4 /* OSVectorMath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSVectorMath.swift; sourceTree = "<group>"; };
 		468078B81B6EA2E7003484F4 /* OSTextureProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSTextureProvider.h; sourceTree = "<group>"; };
@@ -169,6 +170,7 @@
 		467344431B5A735B009B3728 /* ObjectScanner */ = {
 			isa = PBXGroup;
 			children = (
+				4677958F1B772A5000F36942 /* Shared.h */,
 				467344481B5A735B009B3728 /* AppDelegate.h */,
 				467344491B5A735B009B3728 /* AppDelegate.m */,
 				4673444E1B5A735B009B3728 /* Main.storyboard */,

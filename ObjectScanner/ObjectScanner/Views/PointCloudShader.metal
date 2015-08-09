@@ -7,7 +7,11 @@
 //
 
 #include <metal_stdlib>
+#include "../Shared.h"
+
 using namespace metal;
+
+static constant float kPointCloudShaderDepthMean = 2.f;
 
 struct VertexOut {
     float4 position [[position]];
@@ -20,12 +24,11 @@ struct Uniforms{
     float4x4 projectionMatrix;
 };
 
-vertex VertexOut pointCloudVertex (const device float4 *vertices [[buffer (0)]],
+vertex VertexOut pointCloudVertex (const device OSPoint *pointCloud [[buffer (0)]],
                                    const device Uniforms &uniforms [[buffer (1)]],
-                                   texture2d<float, access::read>  inTexture   [[ texture(0) ]],
                                    unsigned int vid [[ vertex_id ]])
 {
-    float4 vertexPoint = vertices[vid];
+    float4 vertexPoint = pointCloud[vid].point;
     
     VertexOut vertexOut;
 
@@ -33,9 +36,9 @@ vertex VertexOut pointCloudVertex (const device float4 *vertices [[buffer (0)]],
     
     
     // Rotate the pointcloud
-    vertexPoint.z -= 2.f;//center point should be near 0.0 point
+    vertexPoint.z -= kPointCloudShaderDepthMean;//center point should be near 0.0 point
     vertexPoint = uniforms.viewMatrix * vertexPoint;
-    vertexPoint.z += 2.f;
+    vertexPoint.z += kPointCloudShaderDepthMean;
     
     // put it into clip space
     vertexPoint.x = - vertexPoint.x;
@@ -49,10 +52,7 @@ vertex VertexOut pointCloudVertex (const device float4 *vertices [[buffer (0)]],
     vertexOut.position = vertexPoint;
 
     // setting the color of the points
-    uint2 gid;
-    gid.x = vid % inTexture.get_width();
-    gid.y = vid / inTexture.get_width();
-    vertexOut.color = inTexture.read(gid);
+    vertexOut.color = pointCloud[vid].color;
     
     // Set the point size in the space
     vertexOut.pointSize = 0.5f;// currently for only @2x retina screens.
@@ -63,5 +63,4 @@ vertex VertexOut pointCloudVertex (const device float4 *vertices [[buffer (0)]],
 fragment float4 pointCloudFragment (VertexOut interpolated [[stage_in]])
 {
     return interpolated.color;
-    return float4(interpolated.color[0], interpolated.color[1], interpolated.color[2], interpolated.color[3]);
 }
