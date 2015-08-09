@@ -19,7 +19,7 @@ let kOSPointCloudViewDamping: CGFloat = 0.05;
 let kOSPointCloudViewXAxis: Vector3 = Vector3(1.0, 0.0, 0.0);
 let kOSPointCloudViewYAxis: Vector3 = Vector3(0.0, 1.0, 0.0);
 
-class OSPointCloudView: UIView {
+class OSPointCloudView: UIView, OSContentLoadingProtocol{
     private let panGestureRecognizer: UIGestureRecognizer = UIPanGestureRecognizer();
     private var angularVelocity: CGPoint = CGPointZero;
     private var angle: CGPoint = CGPointZero;
@@ -28,8 +28,9 @@ class OSPointCloudView: UIView {
     private var metalLayer: CAMetalLayer! = nil;
     
     private static let device: MTLDevice = MTLCreateSystemDefaultDevice()!;
-    private var commandQueue: MTLCommandQueue! = nil;
-    private var pipelineState: MTLRenderPipelineState! = nil;
+    private static let commandQueue: MTLCommandQueue = OSPointCloudView.device.newCommandQueue();
+    private static var pipelineState: MTLRenderPipelineState?;
+    private static var depthStencilState: MTLDepthStencilState?;
     private var timer: CADisplayLink?;
     
     private var isReadForAction = false;
@@ -59,27 +60,6 @@ class OSPointCloudView: UIView {
         metalLayer.pixelFormat = .BGRA8Unorm;
         metalLayer.framebufferOnly = true;
         
-        commandQueue = OSPointCloudView.device.newCommandQueue();
-        
-        
-        let defaultLibrary = OSPointCloudView.device.newDefaultLibrary();
-        let vertexFunction = defaultLibrary!.newFunctionWithName("pointCloudVertex");
-        let fragmentFunction = defaultLibrary!.newFunctionWithName("pointCloudFragment");
-        
-        
-        let pipelineStateDescriptor = MTLRenderPipelineDescriptor();
-        pipelineStateDescriptor.vertexFunction = vertexFunction;
-        pipelineStateDescriptor.fragmentFunction = fragmentFunction;
-        pipelineStateDescriptor.colorAttachments[0].pixelFormat = .BGRA8Unorm;
-        
-        do{
-            pipelineState = try OSPointCloudView.device.newRenderPipelineStateWithDescriptor(pipelineStateDescriptor);
-        } catch _ {
-            pipelineState = nil;
-            print("Failed to create pipeline state.");
-
-        };
-    
         timer = CADisplayLink(target: self, selector: Selector("tic:"))
         timer!.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
         
@@ -117,30 +97,21 @@ class OSPointCloudView: UIView {
 
             if let drawable = metalLayer.nextDrawable()
             {
-                //            var drawable = metalLayer.nextDrawable();
-                
                 let renderPassDescriptor = MTLRenderPassDescriptor();
                 renderPassDescriptor.colorAttachments[0].texture = drawable.texture;
                 renderPassDescriptor.colorAttachments[0].loadAction = .Clear
                 renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0);
                 renderPassDescriptor.colorAttachments[0].storeAction = .Store
                 
-                let commandBuffer = commandQueue.commandBuffer();
+                let commandBuffer = OSPointCloudView.commandQueue.commandBuffer();
                 
                 let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor);
                 renderEncoder.setFrontFacingWinding(MTLWinding.CounterClockwise)
                 renderEncoder.setCullMode(MTLCullMode.Front);
                 
-                renderEncoder.setRenderPipelineState(pipelineState);
+                renderEncoder.setRenderPipelineState(OSPointCloudView.pipelineState!);
                 
-                let depthStencilDescriptor: MTLDepthStencilDescriptor = MTLDepthStencilDescriptor();
-                depthStencilDescriptor.depthCompareFunction = MTLCompareFunction.Less;
-                
-                depthStencilDescriptor.depthWriteEnabled = true;
-                
-                let depthStencilState = OSPointCloudView.device.newDepthStencilStateWithDescriptor(depthStencilDescriptor);
-                renderEncoder.setDepthStencilState(depthStencilState);
-                
+                renderEncoder.setDepthStencilState(OSPointCloudView.depthStencilState);//this will prevents the points, that should appear farther away, to be drawn on top of the other points, which are closer to the camera.
                 
                 renderEncoder.setVertexBuffer(self.getVertexBuffer(), offset: 0, atIndex: 0);
                 
@@ -263,4 +234,46 @@ class OSPointCloudView: UIView {
         self.angularVelocity = CGPointMake(velocity.x * kOSPointCloudViewVelocityScale, velocity.y * kOSPointCloudViewVelocityScale);
     }
     
+// MARK: OSContentLoadingProtocol
+    
+    static func loadContent(completionHandler: (() -> Void)!)
+    {
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0)) { () -> Void in
+            OSPointCloudView.device;
+            
+            OSPointCloudView.commandQueue;
+            
+            if (OSPointCloudView.pipelineState == nil)
+            {
+                let defaultLibrary = OSPointCloudView.device.newDefaultLibrary();
+                let vertexFunction = defaultLibrary!.newFunctionWithName("pointCloudVertex");
+                let fragmentFunction = defaultLibrary!.newFunctionWithName("pointCloudFragment");
+                
+                let pipelineStateDescriptor = MTLRenderPipelineDescriptor();
+                pipelineStateDescriptor.vertexFunction = vertexFunction;
+                pipelineStateDescriptor.fragmentFunction = fragmentFunction;
+                pipelineStateDescriptor.colorAttachments[0].pixelFormat = .BGRA8Unorm;
+                
+                do{
+                    OSPointCloudView.pipelineState = try OSPointCloudView.device.newRenderPipelineStateWithDescriptor(pipelineStateDescriptor);
+                } catch _ {
+                    OSPointCloudView.pipelineState = nil;
+                    print("Failed to create pipeline state.");
+                    
+                };
+                
+                
+                let depthStencilDescriptor: MTLDepthStencilDescriptor = MTLDepthStencilDescriptor();
+                depthStencilDescriptor.depthCompareFunction = MTLCompareFunction.Less;
+                
+                depthStencilDescriptor.depthWriteEnabled = true;
+                
+                OSPointCloudView.depthStencilState = OSPointCloudView.device.newDepthStencilStateWithDescriptor(depthStencilDescriptor);
+
+            }
+            dispatch_sync(dispatch_get_main_queue()) { () -> Void in
+                completionHandler?();
+            };
+        };
+    }
 }
