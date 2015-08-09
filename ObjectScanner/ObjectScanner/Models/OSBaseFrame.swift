@@ -9,39 +9,47 @@
 import UIKit
 import simd
 
+/// Single point representaion in 3D space. Look also Shared.h.
 struct OSPoint {
     var point: float4 = float4(0.0);
     var color: float4 = float4(1.0);
 }
 
+/// calibration matrix that calibrate depth frames onto rgb frame.
 private var calibrationMatrix : [Float] = [9.9984628826577793e-01 , 1.2635359098409581e-03 , -1.7487233004436643e-02, 0,
                                            -1.4779096108364480e-03, 9.9992385683542895e-01 , -1.2251380107679535e-02, 0,
                                            1.7470421412464927e-02 , 1.2275341476520762e-02 , 9.9977202419716948e-01 , 0,
                                            1.9985242312092553e-02 , -7.4423738761617583e-04, -1.0916736334336222e-02,1];
 
-//90 degree counter clockwise rotaion on z axis + -1 translation x axis
-//private var calibrationMatrix : [Float] = [0 , 1 , 0, 0,
-//    -1, 0 , 0, 0,
-//    0 , 0 , 0 , 0,
-//    -1 , 0, 0, 1];
-
+/**
+This class represents a single Kinect camera frame.
+It also constains the calibration process and the result point cloud in 3D space.
+*/
 class OSBaseFrame : OSContentLoadingProtocol{
+// MARK: Properties
+    
+    /// RGB Image of the frame
     let image : UIImage;
+    /// Height of the frame
     var height : Int{
         get {
             return (Int)(self.image.size.height);
         }
     }
+    /// Width of the frame
     var width : Int{
         get{
             return (Int)(self.image.size.width);
         }
     }
-//    private (set) var calibratedDepth : [Float];
+    /// Raw depth frame
     private var notCalibratedDepth: [Float];
+    /// Calibrated but not transformed point cloud in 3D space
+    var pointCloud: [OSPoint];
+    /// Transformation matrix of the current frame in 3D space. This matrix trnasforms the current point cloud respect to the initial frame.
+    var transformationMatrix: Matrix4 = Matrix4.Identity;
     
-    var pointCloud : [OSPoint];
-    
+// MARK: Lifecycle
     required init(image :UIImage, depth: [Float]){
         let size : Int = (Int)(image.size.width) * (Int)(image.size.height)
 
@@ -49,7 +57,6 @@ class OSBaseFrame : OSContentLoadingProtocol{
         
         self.image = image;
         self.notCalibratedDepth = depth;
-//        self.calibratedDepth = [Float](count: depth.count, repeatedValue: -1.0);//-1 will be the invalid depth data value
         self.pointCloud = [OSPoint](count: size, repeatedValue: OSPoint());
     }
     

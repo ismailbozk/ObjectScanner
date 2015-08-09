@@ -12,6 +12,7 @@
 using namespace metal;
 
 static constant float kPointCloudShaderDepthMean = 2.f;
+static constant uint kPointCloudShaderSize = 307200;
 
 struct VertexOut {
     float4 position [[position]];
@@ -25,6 +26,7 @@ struct Uniforms{
 };
 
 vertex VertexOut pointCloudVertex (const device OSPoint *pointCloud [[buffer (0)]],
+                                   const device float4x4 *transformationMatrices [[buffer (2)]],
                                    const device Uniforms &uniforms [[buffer (1)]],
                                    unsigned int vid [[ vertex_id ]])
 {
@@ -33,7 +35,8 @@ vertex VertexOut pointCloudVertex (const device OSPoint *pointCloud [[buffer (0)
     VertexOut vertexOut;
 
     // Point Cloud registration
-    
+    uint frameIndex = vid / kPointCloudShaderSize;
+    vertexPoint = transformationMatrices[frameIndex] * vertexPoint;
     
     // Rotate the pointcloud
     vertexPoint.z -= kPointCloudShaderDepthMean;//center point should be near 0.0 point

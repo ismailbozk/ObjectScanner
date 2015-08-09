@@ -34,13 +34,17 @@ class OSPointCloudView: UIView {
     
     private var isReadForAction = false;
     
-    
+    private var vertices: [OSPoint] = [OSPoint]();
+    private let threadSafeConcurrentVertexAccessQueue = dispatch_queue_create("OSPointCloudViewThreadSafeConcurrentVertexAccessQueue", DISPATCH_QUEUE_CONCURRENT);
     private var vertexBuffer: MTLBuffer?;
-    private var uniformBuffer: MTLBuffer?;
+    private let threadSafeConcurrentVertexBufferAccessQueue : dispatch_queue_t = dispatch_queue_create("OSPointCloudViewThreadSafeConcurrentVertexBufferAccessQueue", DISPATCH_QUEUE_CONCURRENT);//don't use that queue anywhere else other than custom getters and setters for vertexBuffer property.
+
+    private var transformationMatrices: [Matrix4] = [Matrix4]();
+    private var transformationBuffer: MTLBuffer?;
+    private let threadSafeConcurrentTransformationBufferAccessQueue : dispatch_queue_t = dispatch_queue_create("OSPointCloudViewThreadSafeConcurrentTransformationBufferAccessQueue", DISPATCH_QUEUE_CONCURRENT);//don't use that queue anywhere else other than custom getters and setters for transformationBuffer property.
     
     private var uniforms: Uniforms = Uniforms();
-
-    private var vertices: [OSPoint]?;
+    private var uniformBuffer: MTLBuffer?;
     
 // MARK: Lifecycle
     required init?(coder aDecoder: NSCoder) {
@@ -110,43 +114,47 @@ class OSPointCloudView: UIView {
         {
             self.updateMotion();
             self.updateUniforms();
-            
-            let drawable = metalLayer.nextDrawable()!;
-            
-            let renderPassDescriptor = MTLRenderPassDescriptor();
-            renderPassDescriptor.colorAttachments[0].texture = drawable.texture;
-            renderPassDescriptor.colorAttachments[0].loadAction = .Clear
-            renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0);
-            renderPassDescriptor.colorAttachments[0].storeAction = .Store
-            
-            let commandBuffer = commandQueue.commandBuffer();
-            
-            let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor);
-            renderEncoder.setFrontFacingWinding(MTLWinding.CounterClockwise)
-            renderEncoder.setCullMode(MTLCullMode.Front);
-            
-            renderEncoder.setRenderPipelineState(pipelineState);
-            
-            var depthStencilDescriptor: MTLDepthStencilDescriptor = MTLDepthStencilDescriptor();
-            depthStencilDescriptor.depthCompareFunction = MTLCompareFunction.Less;
-            
-            depthStencilDescriptor.depthWriteEnabled = true;
-            
-            var depthStencilState = OSPointCloudView.device.newDepthStencilStateWithDescriptor(depthStencilDescriptor);
-            
-            renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, atIndex: 0);
-            
-            
-            renderEncoder .setDepthStencilState(depthStencilState);
 
-            renderEncoder.setVertexBuffer(self.uniformBuffer, offset: 0, atIndex: 1);
-                        
-            renderEncoder.drawPrimitives(MTLPrimitiveType.Point, vertexStart: 0, vertexCount: (self.vertices?.count)!);
-            renderEncoder.endEncoding();
-            
-            
-            commandBuffer.presentDrawable(drawable);
-            commandBuffer.commit()
+            if let drawable = metalLayer.nextDrawable()
+            {
+                //            var drawable = metalLayer.nextDrawable();
+                
+                let renderPassDescriptor = MTLRenderPassDescriptor();
+                renderPassDescriptor.colorAttachments[0].texture = drawable.texture;
+                renderPassDescriptor.colorAttachments[0].loadAction = .Clear
+                renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0);
+                renderPassDescriptor.colorAttachments[0].storeAction = .Store
+                
+                let commandBuffer = commandQueue.commandBuffer();
+                
+                let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor);
+                renderEncoder.setFrontFacingWinding(MTLWinding.CounterClockwise)
+                renderEncoder.setCullMode(MTLCullMode.Front);
+                
+                renderEncoder.setRenderPipelineState(pipelineState);
+                
+                let depthStencilDescriptor: MTLDepthStencilDescriptor = MTLDepthStencilDescriptor();
+                depthStencilDescriptor.depthCompareFunction = MTLCompareFunction.Less;
+                
+                depthStencilDescriptor.depthWriteEnabled = true;
+                
+                let depthStencilState = OSPointCloudView.device.newDepthStencilStateWithDescriptor(depthStencilDescriptor);
+                renderEncoder.setDepthStencilState(depthStencilState);
+                
+                
+                renderEncoder.setVertexBuffer(self.getVertexBuffer(), offset: 0, atIndex: 0);
+                
+                renderEncoder.setVertexBuffer(self.getTransformationBuffer(), offset: 0, atIndex: 2);
+                
+                renderEncoder.setVertexBuffer(self.uniformBuffer, offset: 0, atIndex: 1);
+                
+                renderEncoder.drawPrimitives(MTLPrimitiveType.Point, vertexStart: 0, vertexCount: self.getVertexArray()!.count);
+                renderEncoder.endEncoding();
+                
+                
+                commandBuffer.presentDrawable(drawable);
+                commandBuffer.commit()
+            }
         }
     }
     
@@ -185,15 +193,67 @@ class OSPointCloudView: UIView {
         
         self.uniformBuffer = OSPointCloudView.device.newBufferWithBytes(&self.uniforms, length: sizeof(Uniforms), options:MTLResourceOptions.CPUCacheModeDefaultCache);
     }
+
+// MARK: Custom Getter/Setters
+    
+    func getVertexBuffer() -> MTLBuffer?
+    {
+        var vertexBuffer : MTLBuffer?;
+        dispatch_sync(self.threadSafeConcurrentVertexBufferAccessQueue) { () -> Void in
+            vertexBuffer = self.vertexBuffer;
+        };
+        return vertexBuffer;
+    }
+    
+    func getTransformationBuffer() -> MTLBuffer?
+    {
+        var transformationBuffer: MTLBuffer?;
+        dispatch_sync(self.threadSafeConcurrentTransformationBufferAccessQueue) { () -> Void in
+            transformationBuffer = self.transformationBuffer;
+        };
+        return transformationBuffer;
+    }
+    
+    func setVertexBuffers(vertexBuffer vertexBuffer: MTLBuffer, transformationBuffer: MTLBuffer)
+    {
+        dispatch_barrier_async(self.threadSafeConcurrentVertexBufferAccessQueue) { () -> Void in
+            self.vertexBuffer = vertexBuffer;
+            self.transformationBuffer = transformationBuffer;
+        };
+    }
+    
+    func getVertexArray() -> [OSPoint]?
+    {
+        var vertexArray: [OSPoint]?
+        dispatch_sync(self.threadSafeConcurrentVertexAccessQueue) { () -> Void in
+            vertexArray = self.vertices;
+        }
+        return vertexArray;
+    }
+
+    func setVertexArray(vertexArray: [OSPoint])
+    {
+        dispatch_barrier_async(self.threadSafeConcurrentVertexAccessQueue) { () -> Void in
+            self.vertices = vertexArray;
+        };
+    }
     
 // MARK: Publics
     
-    func setOSFrame(frame : OSBaseFrame)
+    func appendFrame(frame: OSBaseFrame)
     {
-        self.vertices = frame.pointCloud;
-        self.vertexBuffer = OSPointCloudView.device.newBufferWithBytes(self.vertices!, length: self.vertices!.count * sizeof(OSPoint), options: []);
-        
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0)) { () -> Void in
+            self.transformationMatrices.append(frame.transformationMatrix);
+            let transformationBuffer = OSPointCloudView.device.newBufferWithBytes(self.transformationMatrices, length: self.transformationMatrices.count * sizeof(Matrix4), options: []);
+            
+//            self.setVertexArray(self.vertices + frame.pointCloud);
+            self.vertices += frame.pointCloud;
+            
+            let vertexBuffer = OSPointCloudView.device.newBufferWithBytes(self.getVertexArray()!, length: self.getVertexArray()!.count * sizeof(OSPoint), options: []);
+            self.setVertexBuffers(vertexBuffer: vertexBuffer, transformationBuffer: transformationBuffer);
+        };
         self.isReadForAction = true;
+
     }
     
 // MARK: Gesture Recogniser

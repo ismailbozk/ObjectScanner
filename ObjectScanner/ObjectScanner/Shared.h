@@ -17,9 +17,4 @@ typedef struct
     simd::float4 color;
 }OSPoint;
 
-//struct OSPoint {
-//    simd::float4 point;
-//    simd::float4 color;
-//};
-
 #endif /* Shared_h */
