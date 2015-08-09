@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4603E2D11B77C88800A74C5E /* OSImageFeatureMatcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2D01B77C88800A74C5E /* OSImageFeatureMatcher.mm */; };
 		462689471B5AA25B00CFA891 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 462689461B5AA25A00CFA891 /* Metal.framework */; };
 		462689491B5AA26300CFA891 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 462689481B5AA26300CFA891 /* QuartzCore.framework */; };
 		4626894C1B5AA44D00CFA891 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4626894B1B5AA44D00CFA891 /* UIKit.framework */; };
@@ -16,11 +17,11 @@
 		4626895E1B5B9AB200CFA891 /* OSViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4626895D1B5B9AB200CFA891 /* OSViewController.swift */; };
 		462689601B5BA2B100CFA891 /* OS3DFrameConsumerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4626895F1B5BA2B100CFA891 /* OS3DFrameConsumerProtocol.swift */; };
 		462689621B5BAE5000CFA891 /* OSOpeningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462689611B5BAE5000CFA891 /* OSOpeningViewController.swift */; };
-		464B51B91B67897C00A99117 /* UIImage+OpenCV.mm in Sources */ = {isa = PBXBuildFile; fileRef = 464B51B81B67897C00A99117 /* UIImage+OpenCV.mm */; settings = {COMPILER_FLAGS = "-x objective-c++"; }; };
-		464B51C11B679AEF00A99117 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 464B51B41B67893A00A99117 /* opencv2.framework */; };
 		464454641B6CE1D100653213 /* VectorMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464454631B6CE1D100653213 /* VectorMath.swift */; };
 		464454671B6D3FFE00653213 /* OSPointCloudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464454661B6D3FFE00653213 /* OSPointCloudView.swift */; };
 		464454691B6E33AF00653213 /* PointCloudShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 464454681B6E33AF00653213 /* PointCloudShader.metal */; };
+		464B51B91B67897C00A99117 /* UIImage+OpenCV.mm in Sources */ = {isa = PBXBuildFile; fileRef = 464B51B81B67897C00A99117 /* UIImage+OpenCV.mm */; settings = {COMPILER_FLAGS = "-x objective-c++"; }; };
+		464B51C11B679AEF00A99117 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 464B51B41B67893A00A99117 /* opencv2.framework */; };
 		467344471B5A735B009B3728 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 467344461B5A735B009B3728 /* main.m */; };
 		4673444A1B5A735B009B3728 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 467344491B5A735B009B3728 /* AppDelegate.m */; };
 		467344501B5A735B009B3728 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4673444E1B5A735B009B3728 /* Main.storyboard */; };
@@ -58,6 +59,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4603E2CF1B77C88800A74C5E /* OSImageFeatureMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSImageFeatureMatcher.h; sourceTree = "<group>"; };
+		4603E2D01B77C88800A74C5E /* OSImageFeatureMatcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSImageFeatureMatcher.mm; sourceTree = "<group>"; };
 		462689461B5AA25A00CFA891 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		462689481B5AA26300CFA891 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		4626894B1B5AA44D00CFA891 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -68,12 +71,12 @@
 		4626895D1B5B9AB200CFA891 /* OSViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSViewController.swift; sourceTree = "<group>"; };
 		4626895F1B5BA2B100CFA891 /* OS3DFrameConsumerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OS3DFrameConsumerProtocol.swift; sourceTree = "<group>"; };
 		462689611B5BAE5000CFA891 /* OSOpeningViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSOpeningViewController.swift; sourceTree = "<group>"; };
-		464B51B41B67893A00A99117 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
-		464B51B71B67897C00A99117 /* UIImage+OpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+OpenCV.h"; sourceTree = "<group>"; };
-		464B51B81B67897C00A99117 /* UIImage+OpenCV.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "UIImage+OpenCV.mm"; sourceTree = "<group>"; };
 		464454631B6CE1D100653213 /* VectorMath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VectorMath.swift; sourceTree = "<group>"; };
 		464454661B6D3FFE00653213 /* OSPointCloudView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSPointCloudView.swift; sourceTree = "<group>"; };
 		464454681B6E33AF00653213 /* PointCloudShader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = PointCloudShader.metal; sourceTree = "<group>"; };
+		464B51B41B67893A00A99117 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		464B51B71B67897C00A99117 /* UIImage+OpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+OpenCV.h"; sourceTree = "<group>"; };
+		464B51B81B67897C00A99117 /* UIImage+OpenCV.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "UIImage+OpenCV.mm"; sourceTree = "<group>"; };
 		467344411B5A735B009B3728 /* ObjectScanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjectScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		467344451B5A735B009B3728 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		467344461B5A735B009B3728 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -146,15 +149,6 @@
 			path = ObjectScanner/Frameworks;
 			sourceTree = "<group>";
 		};
-		464B51B61B67894D00A99117 /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				464B51B71B67897C00A99117 /* UIImage+OpenCV.h */,
-				464B51B81B67897C00A99117 /* UIImage+OpenCV.mm */,
-			);
-			path = Categories;
-			sourceTree = "<group>";
-		};
 		464454651B6D3F0600653213 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -162,6 +156,15 @@
 				464454681B6E33AF00653213 /* PointCloudShader.metal */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		464B51B61B67894D00A99117 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				464B51B71B67897C00A99117 /* UIImage+OpenCV.h */,
+				464B51B81B67897C00A99117 /* UIImage+OpenCV.mm */,
+			);
+			path = Categories;
 			sourceTree = "<group>";
 		};
 		467344381B5A735B009B3728 = {
@@ -255,6 +258,8 @@
 				467925CB1B63A6C80037D04D /* OSContentLoadingProtocol.swift */,
 				468078B81B6EA2E7003484F4 /* OSTextureProvider.h */,
 				468078B91B6EA2E7003484F4 /* OSTextureProvider.mm */,
+				4603E2CF1B77C88800A74C5E /* OSImageFeatureMatcher.h */,
+				4603E2D01B77C88800A74C5E /* OSImageFeatureMatcher.mm */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -436,6 +441,7 @@
 				4626895A1B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift in Sources */,
 				46F806BD1B63F44000A15A40 /* OSScannerManager.swift in Sources */,
 				462689571B5B7C7200CFA891 /* OSBaseFrame.swift in Sources */,
+				4603E2D11B77C88800A74C5E /* OSImageFeatureMatcher.mm in Sources */,
 				464B51B91B67897C00A99117 /* UIImage+OpenCV.mm in Sources */,
 				4673446D1B5A73AD009B3728 /* ViewController.m in Sources */,
 				467344471B5A735B009B3728 /* main.m in Sources */,
