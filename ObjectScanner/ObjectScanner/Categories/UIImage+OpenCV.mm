@@ -77,7 +77,7 @@ using namespace cv;
 
 - (cv::Mat)cvMatRepresentationGray
 {
-    CGColorSpaceRef colorSpace = CGImageGetColorSpace(self.CGImage);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
     int cols = self.size.width;
     int rows = self.size.height;
     
@@ -90,6 +90,7 @@ using namespace cv;
                                                     8,                          // Bits per component
                                                     gray.step[0],              // Bytes per row
                                                     colorSpace,                 // Colorspace
+                                                    kCGImageAlphaNone |
                                                     kCGBitmapByteOrderDefault); // Bitmap info flags
     
     CGContextDrawImage(contextRef, CGRectMake(0, 0, cols, rows), self.CGImage);

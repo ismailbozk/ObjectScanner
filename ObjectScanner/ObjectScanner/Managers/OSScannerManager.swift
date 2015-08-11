@@ -106,6 +106,19 @@ class OSScannerManager : OS3DFrameConsumerProtocol
     {
         // calibrating the frame
         dispatch_semaphore_wait(self.calibrationSemaphore, DISPATCH_TIME_FOREVER);
+        
+        let matchCoordinatesOn2D: NSArray? = OSImageFeatureMatcher.sharedInstance().matchImage(frame.image);
+
+//        Sample read matches
+//        if (matchCoordinatesOn2D?.count > 21)
+//        {
+//            var mat: OSMatch = OSMatch();
+//            var val: NSValue? = matchCoordinatesOn2D?.objectAtIndex(0) as? NSValue;
+//            val?.getValue(&mat);
+//            val = matchCoordinatesOn2D?.objectAtIndex(1) as? NSValue;
+//        }
+        
+        
         OSTimer.tic();
         frame.preparePointCloud {[unowned self] () -> Void in
             OSTimer.toc("frame calibrated and converted into 3D space");

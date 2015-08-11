@@ -5,3 +5,4 @@
 #import "OSCameraFrameProvider.h"
 #import "ViewController.h"
 #import "OSTextureProvider.h"
+#import "OSImageFeatureMatcher.h"

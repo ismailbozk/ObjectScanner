@@ -38,6 +38,7 @@
 		467925CC1B63A6C80037D04D /* OSContentLoadingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467925CB1B63A6C80037D04D /* OSContentLoadingProtocol.swift */; };
 		468078B71B6E67BE003484F4 /* OSVectorMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468078B61B6E67BE003484F4 /* OSVectorMath.swift */; };
 		468078BA1B6EA2E7003484F4 /* OSTextureProvider.mm in Sources */ = {isa = PBXBuildFile; fileRef = 468078B91B6EA2E7003484F4 /* OSTextureProvider.mm */; };
+		4691650A1B7E2B09008B3FA7 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469165091B7E2B09008B3FA7 /* Shared.swift */; };
 		46B005751B5BDCC000AE781D /* father1.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005701B5BDCC000AE781D /* father1.png */; };
 		46B005761B5BDCC000AE781D /* father2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005711B5BDCC000AE781D /* father2.png */; };
 		46B005771B5BDCC000AE781D /* father3.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005721B5BDCC000AE781D /* father3.png */; };
@@ -103,6 +104,7 @@
 		468078B61B6E67BE003484F4 /* OSVectorMath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSVectorMath.swift; sourceTree = "<group>"; };
 		468078B81B6EA2E7003484F4 /* OSTextureProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSTextureProvider.h; sourceTree = "<group>"; };
 		468078B91B6EA2E7003484F4 /* OSTextureProvider.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSTextureProvider.mm; sourceTree = "<group>"; };
+		469165091B7E2B09008B3FA7 /* Shared.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
 		46B005701B5BDCC000AE781D /* father1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father1.png; sourceTree = "<group>"; };
 		46B005711B5BDCC000AE781D /* father2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father2.png; sourceTree = "<group>"; };
 		46B005721B5BDCC000AE781D /* father3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father3.png; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				4677958F1B772A5000F36942 /* Shared.h */,
+				469165091B7E2B09008B3FA7 /* Shared.swift */,
 				467344481B5A735B009B3728 /* AppDelegate.h */,
 				467344491B5A735B009B3728 /* AppDelegate.m */,
 				4673444E1B5A735B009B3728 /* Main.storyboard */,
@@ -375,6 +378,7 @@
 				TargetAttributes = {
 					467344401B5A735B009B3728 = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = KPSV2KCFP6;
 					};
 					467344591B5A735B009B3728 = {
 						CreatedOnToolsVersion = 6.4;
@@ -436,6 +440,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4691650A1B7E2B09008B3FA7 /* Shared.swift in Sources */,
 				464454641B6CE1D100653213 /* VectorMath.swift in Sources */,
 				4673444A1B5A735B009B3728 /* AppDelegate.m in Sources */,
 				4626895A1B5B7E8400CFA891 /* OSCameraFrameProviderSwift.swift in Sources */,
@@ -518,6 +523,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -565,6 +571,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -589,6 +596,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EXECUTABLE_PREFIX = "";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/ObjectScanner/Frameworks/**";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -602,6 +611,7 @@
 					"$(PROJECT_DIR)/ObjectScanner/Frameworks/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ObjectScanner/ObjectScanner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -612,6 +622,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EXECUTABLE_PREFIX = "";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/ObjectScanner/Frameworks/**";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -625,6 +637,7 @@
 					"$(PROJECT_DIR)/ObjectScanner/Frameworks/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ObjectScanner/ObjectScanner-Bridging-Header.h";
 			};
 			name = Release;

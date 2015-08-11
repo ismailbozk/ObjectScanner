@@ -10,10 +10,7 @@ import UIKit
 import simd
 
 /// Single point representaion in 3D space. Look also Shared.h.
-struct OSPoint {
-    var point: float4 = float4(0.0);
-    var color: float4 = float4(1.0);
-}
+
 
 /// calibration matrix that calibrate depth frames onto rgb frame.
 private var calibrationMatrix : [Float] = [9.9984628826577793e-01 , 1.2635359098409581e-03 , -1.7487233004436643e-02, 0,
