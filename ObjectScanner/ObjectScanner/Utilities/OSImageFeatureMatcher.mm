@@ -52,7 +52,7 @@ static OSImageFeatureMatcher *sharedInstance;
     return sharedInstance;
 }
 
-- (instancetype)init
+- (nonnull instancetype)init
 {
     self = [super init];
     if (self)
@@ -68,18 +68,24 @@ static OSImageFeatureMatcher *sharedInstance;
 
 - (void)trainWithImage:(UIImage *)image
 {
+    CFTimeInterval startTime = CACurrentMediaTime();
+    
     cv::Mat grayImage = [image cvMatRepresentationGray];
     _detector.detect(grayImage, _trainKeyPoints);
     _extractor.compute(grayImage, _trainKeyPoints, _trainDescriptors);
+    
+    NSLog(@"Task: TrainImage %f", CACurrentMediaTime() - startTime);
 }
 
-- (NSMutableArray *)matchImage:(UIImage *)image
+- (nullable NSMutableArray *)matchImage:(nonnull UIImage *)image
 {
     if (_trainKeyPoints.size() == 0)
     {
         [self trainWithImage:image];
         return nil;
     }
+    
+    CFTimeInterval startTime = CACurrentMediaTime();
     
     cv::Mat queryDescriptors;
     std::vector<cv::KeyPoint> queryKeyPoints;
@@ -123,6 +129,7 @@ static OSImageFeatureMatcher *sharedInstance;
     _trainDescriptors = queryDescriptors;
     _trainKeyPoints = queryKeyPoints;
     
+    NSLog(@"Task: match images %f", CACurrentMediaTime() - startTime);
     
     return matchPairs;
 }

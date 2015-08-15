@@ -16,13 +16,14 @@ typedef struct
 
 @interface OSImageFeatureMatcher : NSObject
 
-+ (instancetype)sharedInstance;
++ (nonnull instancetype)sharedInstance;
 
 /**
  @abstract this method will matched consecutive frames. Call this method again and again to process consecutive frame matching.
  @param image the query image. That image will be converted to gray image and the SURF features will be extracted from it. After the match process is completed, the image features will be the next train features, for the next match operation.
  @note first call of this method will return nil. Because there will be no train feature to match.
+ return OSMatch array
  */
-- (NSMutableArray *)matchImage:(UIImage *)image;
+- (nullable NSMutableArray *)matchImage:(nonnull UIImage *)image;
 
 @end

@@ -6,6 +6,27 @@
 //  Copyright © 2015 Ismail Bozkurt. All rights reserved.
 //
 
+import simd
+
+private let kOSScannerManagerMinNumberOfMatchesForRegistrationProcess = 3;
+
+struct OSMatch3D {
+    var trainPoint: float4
+    var queryPoint: float4
+    
+    init()
+    {
+        self.queryPoint = float4(0.0, 0.0, 0.0, 1.0);
+        self.trainPoint = float4(0.0, 0.0, 0.0, 1.0);
+    }
+    
+    init(queryPoint: float4, trainPoint: float4)
+    {
+        self.queryPoint = queryPoint;
+        self.trainPoint = trainPoint;
+    }
+}
+
 enum OSScannerManagerState: String
 {
     case Idle = "OSScannerManagerIdle"
@@ -105,33 +126,36 @@ class OSScannerManager : OS3DFrameConsumerProtocol
     private func startSingleFrameOperations(frame : OSBaseFrame)
     {
         // calibrating the frame
-        dispatch_semaphore_wait(self.calibrationSemaphore, DISPATCH_TIME_FOREVER);
         
-        let matchCoordinatesOn2D: NSArray? = OSImageFeatureMatcher.sharedInstance().matchImage(frame.image);
-
-//        Sample read matches
-//        if (matchCoordinatesOn2D?.count > 21)
-//        {
-//            var mat: OSMatch = OSMatch();
-//            var val: NSValue? = matchCoordinatesOn2D?.objectAtIndex(0) as? NSValue;
-//            val?.getValue(&mat);
-//            val = matchCoordinatesOn2D?.objectAtIndex(1) as? NSValue;
-//        }
-        
-        
-        OSTimer.tic();
         frame.preparePointCloud {[unowned self] () -> Void in
-            OSTimer.toc("frame calibrated and converted into 3D space");
             dispatch_semaphore_signal(self.calibrationSemaphore);
             self.appendFrame(frame);
             
-            self.delegate?.scannerManagerDidPreparedFrame(self, frame: frame);
+//            self.delegate?.scannerManagerDidPreparedFrame(self, frame: frame);
+            
+            let matchCoordinatesIn2D: NSArray? = OSImageFeatureMatcher.sharedInstance().matchImage(frame.image);
+            if (matchCoordinatesIn2D?.count > kOSScannerManagerMinNumberOfMatchesForRegistrationProcess)
+            {
+                OSTimer.tic();
+                var matchesIn3D = [OSMatch3D](count: (matchCoordinatesIn2D?.count)!, repeatedValue: OSMatch3D());
+                OSTimer.toc("creat matched 3 d array");
+                
+                OSTimer.tic();
+                var matchIn2D: OSMatch = OSMatch();
+                for (var i: Int = 0; i < matchCoordinatesIn2D?.count; i++)
+                {
+                    let val: NSValue? = matchCoordinatesIn2D?.objectAtIndex(i) as? NSValue;
+                    val?.getValue(&matchIn2D);
+                    let trainImageIndex = (Int)(matchIn2D.trainPoint.y) * frame.width + (Int)(matchIn2D.trainPoint.x);
+                    let queryImageIndex = (Int)(matchIn2D.queryPoint.y) * frame.width + (Int)(matchIn2D.queryPoint.x);
+                    
+                    matchesIn3D[i] = OSMatch3D(queryPoint: frame.pointCloud[queryImageIndex].point, trainPoint: frame.pointCloud[trainImageIndex].point);
+                }
+                OSTimer.toc("fill 3d matched array");
+            }
+            
+            
         };
-        
-        // image feature extracting
-        dispatch_semaphore_wait(self.featureExtractionSemaphore, DISPATCH_TIME_FOREVER)
-        
-        dispatch_semaphore_signal(self.featureExtractionSemaphore);
     }
     
     /**
