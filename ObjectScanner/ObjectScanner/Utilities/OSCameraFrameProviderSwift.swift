@@ -54,11 +54,11 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
         super.prepareFramesWithCompletion({[unowned self] () -> Void in
             let startTime = CACurrentMediaTime();
 
-            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("father1"));
-            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("father2"));
-//            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("father3"));
-//            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("father4"));
-//            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("father5"));
+            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes1"));
+//            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes2"));
+//            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes3"));
+            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes4"));
+//            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes5"));
 
             let elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;
             
