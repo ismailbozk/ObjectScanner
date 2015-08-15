@@ -10,23 +10,6 @@ import simd
 
 private let kOSScannerManagerMinNumberOfMatchesForRegistrationProcess = 3;
 
-struct OSMatch3D {
-    var trainPoint: float4
-    var queryPoint: float4
-    
-    init()
-    {
-        self.queryPoint = float4(0.0, 0.0, 0.0, 1.0);
-        self.trainPoint = float4(0.0, 0.0, 0.0, 1.0);
-    }
-    
-    init(queryPoint: float4, trainPoint: float4)
-    {
-        self.queryPoint = queryPoint;
-        self.trainPoint = trainPoint;
-    }
-}
-
 enum OSScannerManagerState: String
 {
     case Idle = "OSScannerManagerIdle"
@@ -58,6 +41,8 @@ class OSScannerManager : OS3DFrameConsumerProtocol
     private let featureExtractionSemaphore : dispatch_semaphore_t = dispatch_semaphore_create(1);
     private let threadSafeConcurrentFrameArrayConcurrentQueue : dispatch_queue_t = dispatch_queue_create("OSScannerManagerThreadSafeConcurrentFrameArrayConcurrentQueue", DISPATCH_QUEUE_CONCURRENT);//don't use that queue anywhere else other than custom getters and setters for consecutiveFrames property.
     private var consecutiveFrames : [OSBaseFrame] = [OSBaseFrame]();
+    
+    private var isThisTheFirstTime = true;
 
 // MARK: Custom concurrentFrameArray Getter/Setters
     
@@ -125,22 +110,21 @@ class OSScannerManager : OS3DFrameConsumerProtocol
     */
     private func startSingleFrameOperations(frame : OSBaseFrame)
     {
+        dispatch_semaphore_wait(self.calibrationSemaphore, DISPATCH_TIME_FOREVER);
+        self.appendFrame(frame);
+        
         // calibrating the frame
         
         frame.preparePointCloud {[unowned self] () -> Void in
-            dispatch_semaphore_signal(self.calibrationSemaphore);
-            self.appendFrame(frame);
             
-//            self.delegate?.scannerManagerDidPreparedFrame(self, frame: frame);
             
             let matchCoordinatesIn2D: NSArray? = OSImageFeatureMatcher.sharedInstance().matchImage(frame.image);
-            if (matchCoordinatesIn2D?.count > kOSScannerManagerMinNumberOfMatchesForRegistrationProcess)
+            if (matchCoordinatesIn2D?.count > kOSScannerManagerMinNumberOfMatchesForRegistrationProcess && !self.isThisTheFirstTime)
             {
-                OSTimer.tic();
-                var matchesIn3D = [OSMatch3D](count: (matchCoordinatesIn2D?.count)!, repeatedValue: OSMatch3D());
-                OSTimer.toc("creat matched 3 d array");
+                let trainFrame = self.frameAtIndex(self.consecutiveFrames.count - 1 - 1);
+
+                var matchesIn3D = NSMutableArray();
                 
-                OSTimer.tic();
                 var matchIn2D: OSMatch = OSMatch();
                 for (var i: Int = 0; i < matchCoordinatesIn2D?.count; i++)
                 {
@@ -148,13 +132,30 @@ class OSScannerManager : OS3DFrameConsumerProtocol
                     val?.getValue(&matchIn2D);
                     let trainImageIndex = (Int)(matchIn2D.trainPoint.y) * frame.width + (Int)(matchIn2D.trainPoint.x);
                     let queryImageIndex = (Int)(matchIn2D.queryPoint.y) * frame.width + (Int)(matchIn2D.queryPoint.x);
-                    
-                    matchesIn3D[i] = OSMatch3D(queryPoint: frame.pointCloud[queryImageIndex].point, trainPoint: frame.pointCloud[trainImageIndex].point);
+                    if (frame.pointCloud[queryImageIndex].isValid() && trainFrame.pointCloud[trainImageIndex].isValid())
+                    {
+                        var singleMatch: OSMatch3D = OSMatch3D(queryPoint: frame.pointCloud[queryImageIndex].point, trainPoint: trainFrame.pointCloud[trainImageIndex].point);
+                        let singleMatchData: NSData = NSData(bytes: &singleMatch, length: sizeof(OSMatch3D));
+                        matchesIn3D.addObject(singleMatchData);
+                    }
                 }
-                OSTimer.toc("fill 3d matched array");
+                
+                let transformationMatrixData: NSData = OSRegistrationUtility.createTransformationMatrixWithMatches(matchesIn3D as [AnyObject]);
+                var transformationMatrix: Matrix4 = Matrix4.Identity;
+                transformationMatrixData.getBytes(&transformationMatrix, length: sizeof(Matrix4));
+                
+                frame.transformationMatrix = transformationMatrix;
+                
+                
+                dispatch_semaphore_signal(self.calibrationSemaphore);
+
+                
+
             }
-            
-            
+            else if (self.isThisTheFirstTime)
+            {
+                self.delegate?.scannerManagerDidPreparedFrame(self, frame: frame);
+            }
         };
     }
     

@@ -10,13 +10,17 @@
 #define Shared_h
 
 #include <simd/simd.h>
-//#include <CoreGraphics/CGGeometry.h>
-
 
 typedef struct
 {
     simd::float4 point;
     simd::float4 color;
 }OSPoint;
+
+typedef struct
+{
+    simd::float4 trainPoint;
+    simd::float4 queryPoint;
+}OSMatch3D;
 
 #endif /* Shared_h */

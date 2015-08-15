@@ -6,3 +6,4 @@
 #import "ViewController.h"
 #import "OSTextureProvider.h"
 #import "OSImageFeatureMatcher.h"
+#import "OSRegistrationUtility.h"

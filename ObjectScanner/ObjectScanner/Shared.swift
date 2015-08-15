@@ -29,6 +29,37 @@ struct OSPoint {
     }
 }
 
+struct OSMatch3D {
+    var trainPoint: float4
+    var queryPoint: float4
+    
+    init()
+    {
+        self.queryPoint = float4(0.0, 0.0, 0.0, 1.0);
+        self.trainPoint = float4(0.0, 0.0, 0.0, 1.0);
+    }
+    
+    init(queryPoint: float4, trainPoint: float4)
+    {
+        self.queryPoint = queryPoint;
+        self.trainPoint = trainPoint;
+    }
+//    var trainPoint: Vector4
+//    var queryPoint: Vector4
+//    
+//    init()
+//    {
+//        self.queryPoint = Vector4(0.0, 0.0, 0.0, 1.0);
+//        self.trainPoint = Vector4(0.0, 0.0, 0.0, 1.0);
+//    }
+//    
+//    init(queryPoint: Vector4, trainPoint: Vector4)
+//    {
+//        self.queryPoint = queryPoint;
+//        self.trainPoint = trainPoint;
+//    }
+}
+
 struct OSMatch{
     var trainPoint: CGPoint;
     var queryPoint: CGPoint;

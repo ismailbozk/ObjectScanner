@@ -46,6 +46,8 @@
 		46B005791B5BDCC000AE781D /* father5.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B005741B5BDCC000AE781D /* father5.png */; };
 		46B0057D1B5BFF4F00AE781D /* RGBDepthFrame.metal in Sources */ = {isa = PBXBuildFile; fileRef = 46B0057C1B5BFF4F00AE781D /* RGBDepthFrame.metal */; };
 		46BB660E1B5FA0BE001897AD /* OSTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BB660D1B5FA0BE001897AD /* OSTimer.swift */; };
+		46F19D221B7F5B1A006FBC24 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46F19D211B7F5B1A006FBC24 /* Accelerate.framework */; };
+		46F19D251B7F7AB1006FBC24 /* OSRegistrationUtility.mm in Sources */ = {isa = PBXBuildFile; fileRef = 46F19D241B7F7AB1006FBC24 /* OSRegistrationUtility.mm */; };
 		46F806BD1B63F44000A15A40 /* OSScannerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F806BC1B63F44000A15A40 /* OSScannerManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -112,6 +114,9 @@
 		46B005741B5BDCC000AE781D /* father5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = father5.png; sourceTree = "<group>"; };
 		46B0057C1B5BFF4F00AE781D /* RGBDepthFrame.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = RGBDepthFrame.metal; sourceTree = "<group>"; };
 		46BB660D1B5FA0BE001897AD /* OSTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSTimer.swift; sourceTree = "<group>"; };
+		46F19D211B7F5B1A006FBC24 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		46F19D231B7F7AB1006FBC24 /* OSRegistrationUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSRegistrationUtility.h; sourceTree = "<group>"; };
+		46F19D241B7F7AB1006FBC24 /* OSRegistrationUtility.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSRegistrationUtility.mm; sourceTree = "<group>"; };
 		46F806BC1B63F44000A15A40 /* OSScannerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSScannerManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -120,6 +125,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46F19D221B7F5B1A006FBC24 /* Accelerate.framework in Frameworks */,
 				464B51C11B679AEF00A99117 /* opencv2.framework in Frameworks */,
 				4626894E1B5AA45700CFA891 /* CoreGraphics.framework in Frameworks */,
 				4626894C1B5AA44D00CFA891 /* UIKit.framework in Frameworks */,
@@ -141,6 +147,7 @@
 		462689451B5AA24600CFA891 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				46F19D211B7F5B1A006FBC24 /* Accelerate.framework */,
 				464B51B41B67893A00A99117 /* opencv2.framework */,
 				4626894D1B5AA45700CFA891 /* CoreGraphics.framework */,
 				4626894B1B5AA44D00CFA891 /* UIKit.framework */,
@@ -263,6 +270,8 @@
 				468078B91B6EA2E7003484F4 /* OSTextureProvider.mm */,
 				4603E2CF1B77C88800A74C5E /* OSImageFeatureMatcher.h */,
 				4603E2D01B77C88800A74C5E /* OSImageFeatureMatcher.mm */,
+				46F19D231B7F7AB1006FBC24 /* OSRegistrationUtility.h */,
+				46F19D241B7F7AB1006FBC24 /* OSRegistrationUtility.mm */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -461,6 +470,7 @@
 				46B0057D1B5BFF4F00AE781D /* RGBDepthFrame.metal in Sources */,
 				468078B71B6E67BE003484F4 /* OSVectorMath.swift in Sources */,
 				464454691B6E33AF00653213 /* PointCloudShader.metal in Sources */,
+				46F19D251B7F7AB1006FBC24 /* OSRegistrationUtility.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

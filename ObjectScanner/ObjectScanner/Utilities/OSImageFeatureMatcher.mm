@@ -25,7 +25,6 @@
 static short surfHessianThreshold = 300;
 static float uniquenessThreshold = 0.8f;
 static short k = 2;
-static float ransacThreshold = 0.2f;
 
 static OSImageFeatureMatcher *sharedInstance;
 
