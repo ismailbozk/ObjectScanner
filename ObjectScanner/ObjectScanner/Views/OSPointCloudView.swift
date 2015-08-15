@@ -95,8 +95,12 @@ class OSPointCloudView: UIView, OSContentLoadingProtocol{
             self.updateMotion();
             self.updateUniforms();
 
-            if let drawable = metalLayer.nextDrawable()
+            if  let drawable = metalLayer.nextDrawable(),
+                let tempVertexBuffer = self.getVertexBuffer(),
+                let tempTransformationBuffer = self.getTransformationBuffer()
             {
+                
+                let vertexCount = self.getVertexArray()!.count;
                 let renderPassDescriptor = MTLRenderPassDescriptor();
                 renderPassDescriptor.colorAttachments[0].texture = drawable.texture;
                 renderPassDescriptor.colorAttachments[0].loadAction = .Clear
@@ -113,13 +117,13 @@ class OSPointCloudView: UIView, OSContentLoadingProtocol{
                 
                 renderEncoder.setDepthStencilState(OSPointCloudView.depthStencilState);//this will prevents the points, that should appear farther away, to be drawn on top of the other points, which are closer to the camera.
                 
-                renderEncoder.setVertexBuffer(self.getVertexBuffer(), offset: 0, atIndex: 0);
+                renderEncoder.setVertexBuffer(tempVertexBuffer, offset: 0, atIndex: 0);
                 
-                renderEncoder.setVertexBuffer(self.getTransformationBuffer(), offset: 0, atIndex: 2);
+                renderEncoder.setVertexBuffer(tempTransformationBuffer, offset: 0, atIndex: 2);
                 
                 renderEncoder.setVertexBuffer(self.uniformBuffer, offset: 0, atIndex: 1);
                 
-                renderEncoder.drawPrimitives(MTLPrimitiveType.Point, vertexStart: 0, vertexCount: self.getVertexArray()!.count);
+                renderEncoder.drawPrimitives(MTLPrimitiveType.Point, vertexStart: 0, vertexCount: vertexCount);
                 renderEncoder.endEncoding();
                 
                 

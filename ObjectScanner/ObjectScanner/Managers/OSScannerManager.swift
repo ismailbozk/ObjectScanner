@@ -116,8 +116,6 @@ class OSScannerManager : OS3DFrameConsumerProtocol
         // calibrating the frame
         
         frame.preparePointCloud {[unowned self] () -> Void in
-            
-            
             let matchCoordinatesIn2D: NSArray? = OSImageFeatureMatcher.sharedInstance().matchImage(frame.image);
             if (matchCoordinatesIn2D?.count > kOSScannerManagerMinNumberOfMatchesForRegistrationProcess && !self.isThisTheFirstTime)
             {
@@ -146,16 +144,17 @@ class OSScannerManager : OS3DFrameConsumerProtocol
                 
                 frame.transformationMatrix = transformationMatrix;
                 
-                
-                dispatch_semaphore_signal(self.calibrationSemaphore);
+    
 
-                
-
+                self.delegate?.scannerManagerDidPreparedFrame(self, frame: frame);
             }
             else if (self.isThisTheFirstTime)
             {
+                self.isThisTheFirstTime = false;
                 self.delegate?.scannerManagerDidPreparedFrame(self, frame: frame);
             }
+            
+            dispatch_semaphore_signal(self.calibrationSemaphore);
         };
     }
     
