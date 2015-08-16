@@ -217,7 +217,6 @@ class OSPointCloudView: UIView, OSContentLoadingProtocol{
     
     func appendFrame(frame: OSBaseFrame)
     {
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0)) { () -> Void in
             self.transformationMatrices.append(frame.transformationMatrix);
             let transformationBuffer = OSPointCloudView.device.newBufferWithBytes(self.transformationMatrices, length: self.transformationMatrices.count * sizeof(Matrix4), options: []);
             
@@ -226,9 +225,7 @@ class OSPointCloudView: UIView, OSContentLoadingProtocol{
             
             let vertexBuffer = OSPointCloudView.device.newBufferWithBytes(self.getVertexArray()!, length: self.getVertexArray()!.count * sizeof(OSPoint), options: []);
             self.setVertexBuffers(vertexBuffer: vertexBuffer, transformationBuffer: transformationBuffer);
-        };
         self.isReadForAction = true;
-
     }
     
 // MARK: Gesture Recogniser

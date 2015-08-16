@@ -142,7 +142,7 @@ class OSScannerManager : OS3DFrameConsumerProtocol
                 var transformationMatrix: Matrix4 = Matrix4.Identity;
                 transformationMatrixData.getBytes(&transformationMatrix, length: sizeof(Matrix4));
                 
-                frame.transformationMatrix = transformationMatrix;
+                frame.transformationMatrix = trainFrame.transformationMatrix * transformationMatrix;
                 
     
 
