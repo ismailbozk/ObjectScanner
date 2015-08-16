@@ -3,7 +3,23 @@
 //  ObjectScanner
 //
 //  Created by Ismail Bozkurt on 19/07/2015.
-//  Copyright (c) 2015 Ismail Bozkurt. All rights reserved.
+//  The MIT License (MIT)
+//
+//  Copyright (c) 2015 Ismail Bozkurt
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+//  and associated documentation files (the "Software"), to deal in the Software without
+//  restriction, including without limitation the rights to use, copy, modify, merge, publish,
+//  distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//  The above copyright notice and this permission notice shall be included in all copies or
+//  substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+//  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+//  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
 #include <metal_stdlib>
@@ -27,26 +43,6 @@ kernel void calibrateFrame(texture2d<float, access::read> image [[ texture(0) ]]
                            const constant float4x4 &calibrationMatrix [[buffer(2)]],
                            const uint id [[thread_position_in_grid]])
 {
-//    switch (id)
-//    {
-//    case 0:
-//            outputPointCloud[id] = float4(calibrationMatrix[0][0], calibrationMatrix[0][1], calibrationMatrix[0][2], calibrationMatrix[0][3]);
-//        break;
-//    case 1:
-//            outputPointCloud[id] = float4(calibrationMatrix[1][0], calibrationMatrix[1][1], calibrationMatrix[1][2], calibrationMatrix[1][3]);
-//        break;
-//    case 2:
-//            outputPointCloud[id] = float4(calibrationMatrix[2][0], calibrationMatrix[2][1], calibrationMatrix[2][2], calibrationMatrix[2][3]);
-//        break;
-//    case 3:
-//            outputPointCloud[id] = float4(calibrationMatrix[3][0], calibrationMatrix[3][1], calibrationMatrix[3][2], calibrationMatrix[3][3]);
-//        break;
-//    default:
-//        outputPointCloud[id] = calibrationMatrix * float4(0, -1, 0 ,1);
-//        break;
-//    }
-    
-    
     if (depthValues[id] > 1.f) //if the depth value is valid
     {
         uint width = image.get_width();

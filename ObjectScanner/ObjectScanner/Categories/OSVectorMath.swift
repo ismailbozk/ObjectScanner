@@ -3,45 +3,27 @@
 //  ObjectScanner
 //
 //  Created by Ismail Bozkurt on 02/08/2015.
-//  Copyright © 2015 Ismail Bozkurt. All rights reserved.
+//  The MIT License (MIT)
 //
-
+//  Copyright (c) 2015 Ismail Bozkurt
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+//  and associated documentation files (the "Software"), to deal in the Software without
+//  restriction, including without limitation the rights to use, copy, modify, merge, publish,
+//  distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//  The above copyright notice and this permission notice shall be included in all copies or
+//  substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+//  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+//  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 extension Matrix4
 {
-//    simd::float4x4 Rotation(simd::float3 axis, float angle)
-//    {
-//    float c = cos(angle);
-//    float s = sin(angle);
-//    
-//    simd::float4 X;
-//    X.x = axis.x * axis.x + (1 - axis.x * axis.x) * c;
-//    X.y = axis.x * axis.y * (1 - c) - axis.z*s;
-//    X.z = axis.x * axis.z * (1 - c) + axis.y * s;
-//    X.w = 0.0;
-//    
-//    simd::float4 Y;
-//    Y.x = axis.x * axis.y * (1 - c) + axis.z * s;
-//    Y.y = axis.y * axis.y + (1 - axis.y * axis.y) * c;
-//    Y.z = axis.y * axis.z * (1 - c) - axis.x * s;
-//    Y.w = 0.0;
-//    
-//    simd::float4 Z;
-//    Z.x = axis.x * axis.z * (1 - c) - axis.y * s;
-//    Z.y = axis.y * axis.z * (1 - c) + axis.x * s;
-//    Z.z = axis.z * axis.z + (1 - axis.z * axis.z) * c;
-//    Z.w = 0.0;
-//    
-//    simd::float4 W;
-//    W.x = 0.0;
-//    W.y = 0.0;
-//    W.z = 0.0;
-//    W.w = 1.0;
-//    
-//    simd::float4x4 mat = { X, Y, Z, W };
-//    return mat;
-//    }
-    
     static func rotation(axis axis: Vector3, angle: Scalar) -> Matrix4
     {
         let c: Scalar = cos(angle);
