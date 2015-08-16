@@ -60,20 +60,6 @@ struct OSMatch3D {
         self.queryPoint = queryPoint;
         self.trainPoint = trainPoint;
     }
-//    var trainPoint: Vector4
-//    var queryPoint: Vector4
-//    
-//    init()
-//    {
-//        self.queryPoint = Vector4(0.0, 0.0, 0.0, 1.0);
-//        self.trainPoint = Vector4(0.0, 0.0, 0.0, 1.0);
-//    }
-//    
-//    init(queryPoint: Vector4, trainPoint: Vector4)
-//    {
-//        self.queryPoint = queryPoint;
-//        self.trainPoint = trainPoint;
-//    }
 }
 
 struct OSMatch{
