@@ -87,23 +87,23 @@
     // Transformation
     // Rotation
     (transformation).columns[0][0] = vt(0,0);
-    (transformation).columns[0][1] = vt(0,1);
-    (transformation).columns[0][2] = vt(0,2);
-    (transformation).columns[0][3] = 0.0;
-    
-    (transformation).columns[1][0] = vt(1,0);
-    (transformation).columns[1][1] = vt(1,1);
-    (transformation).columns[1][2] = vt(1,2);
-    (transformation).columns[1][3] = 0.0;
-    
-    (transformation).columns[2][0] = vt(2,0);
-    (transformation).columns[2][1] = vt(2,1);
-    (transformation).columns[2][2] = vt(2,2);
-    (transformation).columns[2][3] = 0.0;
-    
+    (transformation).columns[1][0] = vt(0,1);
+    (transformation).columns[2][0] = vt(0,2);
     (transformation).columns[3][0] = 0.0;
+    
+    (transformation).columns[0][1] = vt(1,0);
+    (transformation).columns[1][1] = vt(1,1);
+    (transformation).columns[2][1] = vt(1,2);
     (transformation).columns[3][1] = 0.0;
+    
+    (transformation).columns[0][2] = vt(2,0);
+    (transformation).columns[1][2] = vt(2,1);
+    (transformation).columns[2][2] = vt(2,2);
     (transformation).columns[3][2] = 0.0;
+    
+    (transformation).columns[0][3] = 0.0;
+    (transformation).columns[1][3] = 0.0;
+    (transformation).columns[2][3] = 0.0;
     (transformation).columns[3][3] = 1.0;
 
     // Translation
