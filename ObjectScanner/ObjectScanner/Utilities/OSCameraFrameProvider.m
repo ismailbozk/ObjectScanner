@@ -35,11 +35,11 @@
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
         CFTimeInterval startTime = CACurrentMediaTime();
 
-        [self.images addObject:[OSCameraFrameProvider imageForFilePrefix:@"boxes1"]];
+//        [self.images addObject:[OSCameraFrameProvider imageForFilePrefix:@"boxes1"]];
         [self.images addObject:[OSCameraFrameProvider imageForFilePrefix:@"boxes2"]];
-        [self.images addObject:[OSCameraFrameProvider imageForFilePrefix:@"boxes3"]];
+//        [self.images addObject:[OSCameraFrameProvider imageForFilePrefix:@"boxes3"]];
         [self.images addObject:[OSCameraFrameProvider imageForFilePrefix:@"boxes4"]];
-        [self.images addObject:[OSCameraFrameProvider imageForFilePrefix:@"boxes5"]];
+//        [self.images addObject:[OSCameraFrameProvider imageForFilePrefix:@"boxes5"]];
         
         CFTimeInterval elapsedTime = CACurrentMediaTime() - startTime;
         
