@@ -38,6 +38,7 @@ class OSOpeningViewController: OSViewController, OSScannerManagerDelegate {
     @IBAction func startScanning(sender: AnyObject)
     {
         OSScannerManager.sharedInstance.startSimulating();
+        self.startScanningButton.enabled = false;
     }
     
 // MARK: OSScannerManager Utilities
