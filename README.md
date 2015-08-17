@@ -1,7 +1,7 @@
 Purpose
 --------------
 
-Object Scanner is a portion of [my thesis](https://github.com/ismailbozk/kinectObjectScanner) project, written in C++ Objective-C and Swift. 
+Object Scanner is a portion of [my thesis](https://github.com/ismailbozk/kinectObjectScanner) project, written in C++, Objective-C and Swift. 
 
 The whole purpose of this project is exploring the GPGPU and graphics programming on Metal Api.
 
@@ -14,7 +14,7 @@ The following steps are followed in this project.
   * Creating the transformation matrix on consecutive frames (No error management.)
   * Presenting the consecutive point clouds on the screen by using the Metal vertex and fragment shaders.
  
-Aknowledgements
+Acknowledgements
 ----------------
 
 This project is portion of my Master Thesis project, you can check the whole project in [here](https://github.com/ismailbozk/kinectObjectScanner).
