@@ -13,6 +13,8 @@ The following steps are followed in this project.
   * Calibrating the rgb-depth frame and creating point cloud by using Metal compute shader.
   * Creating the transformation matrix on consecutive frames (No error management.)
   * Presenting the consecutive point clouds on the screen by using the Metal vertex and fragment shaders.
+
+![Main screen](https://github.com/ismailbozk/ObjectScanner/blob/screenshots/screenshots/IMG_0070.PNG)
  
 Acknowledgements
 ----------------
