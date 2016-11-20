@@ -23,6 +23,7 @@ This project is portion of my Master Thesis project, you can check the whole pro
 
 This project is developed by using the following articles/projects and the Computer Vision algorithms that I used in the master thesis.
 
+* [Kinect Camera Calibration](http://nicolas.burrus.name/index.php/Research/KinectCalibration)
 * [MetalByExample](http://metalbyexample.com/)
 * [Apple Matel Docs](https://developer.apple.com/metal/)
 * [iOS-OpenCV-FaceRec](https://github.com/ekurutepe/iOS-OpenCV-FaceRec)
@@ -30,8 +31,8 @@ This project is developed by using the following articles/projects and the Compu
 Supported OS & SDK Versions
 -----------------------------
 
-* Supported build target - iOS 8.2,  Xcode 7 beta 5
-* iOS Devices with A7 or higher chip. (Metal doesn't work on simulators)
+* Supported build target - iOS 9.0,  Xcode 8.1
+* iOS Devices with A7 or higher chip. (As you may know, Metal doesn't work on simulators)
 
 Data Types
 --------------
