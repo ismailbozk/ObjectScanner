@@ -388,9 +388,11 @@
 					467344401B5A735B009B3728 = {
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = KPSV2KCFP6;
+						LastSwiftMigration = 0810;
 					};
 					467344591B5A735B009B3728 = {
 						CreatedOnToolsVersion = 6.4;
+						LastSwiftMigration = 0810;
 						TestTargetID = 467344401B5A735B009B3728;
 					};
 				};
@@ -608,6 +610,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = KPSV2KCFP6;
 				EXECUTABLE_PREFIX = "";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/ObjectScanner/Frameworks/**";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -624,6 +627,7 @@
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ObjectScanner/ObjectScanner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -634,6 +638,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = KPSV2KCFP6;
 				EXECUTABLE_PREFIX = "";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/ObjectScanner/Frameworks/**";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -649,6 +654,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ObjectScanner/ObjectScanner-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -667,6 +673,7 @@
 				INFOPLIST_FILE = ObjectScannerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ObjectScanner.app/ObjectScanner";
 			};
 			name = Debug;
@@ -682,6 +689,7 @@
 				INFOPLIST_FILE = ObjectScannerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ObjectScanner.app/ObjectScanner";
 			};
 			name = Release;

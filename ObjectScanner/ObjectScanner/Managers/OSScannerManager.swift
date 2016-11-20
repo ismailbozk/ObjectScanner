@@ -37,7 +37,7 @@ enum OSScannerManagerState: String
 
 protocol OSScannerManagerDelegate : class
 {
-    func scannerManagerDidPreparedFrame(scannerManager: OSScannerManager, frame: OSBaseFrame) -> Void;
+    func scannerManagerDidPreparedFrame(_ scannerManager: OSScannerManager, frame: OSBaseFrame) -> Void;
 }
 
 class OSScannerManager : OS3DFrameConsumerProtocol
@@ -47,44 +47,44 @@ class OSScannerManager : OS3DFrameConsumerProtocol
     var state : OSScannerManagerState = .Idle {
         didSet
         {
-            dispatch_async(dispatch_get_main_queue()) { () -> Void in
-                NSNotificationCenter.defaultCenter().postNotificationName(self.state.rawValue, object:self);
+            DispatchQueue.main.async { () -> Void in
+                NotificationCenter.default.post(name: Notification.Name(rawValue: self.state.rawValue), object:self);
             };
         }
     };
     
-    private let calibrationSemaphore : dispatch_semaphore_t = dispatch_semaphore_create(1);
-    private let featureExtractionSemaphore : dispatch_semaphore_t = dispatch_semaphore_create(1);
-    private let threadSafeConcurrentFrameArrayConcurrentQueue : dispatch_queue_t = dispatch_queue_create("OSScannerManagerThreadSafeConcurrentFrameArrayConcurrentQueue", DISPATCH_QUEUE_CONCURRENT);//don't use that queue anywhere else other than custom getters and setters for consecutiveFrames property.
-    private var consecutiveFrames : [OSBaseFrame] = [OSBaseFrame]();
+    fileprivate let calibrationSemaphore : DispatchSemaphore = DispatchSemaphore(value: 1);
+    fileprivate let featureExtractionSemaphore : DispatchSemaphore = DispatchSemaphore(value: 1);
+    fileprivate let threadSafeConcurrentFrameArrayConcurrentQueue : DispatchQueue = DispatchQueue(label: "OSScannerManagerThreadSafeConcurrentFrameArrayConcurrentQueue", attributes: DispatchQueue.Attributes.concurrent);//don't use that queue anywhere else other than custom getters and setters for consecutiveFrames property.
+    fileprivate var consecutiveFrames : [OSBaseFrame] = [OSBaseFrame]();
     
-    private var isThisTheFirstTime = true;
+    fileprivate var isThisTheFirstTime = true;
 
 // MARK: Custom concurrentFrameArray Getter/Setters
     
-    private func frameAtIndex(index : Int) -> OSBaseFrame
+    fileprivate func frameAtIndex(_ index : Int) -> OSBaseFrame
     {
         var frame : OSBaseFrame!
         
-        dispatch_sync(self.threadSafeConcurrentFrameArrayConcurrentQueue) { () -> Void in
+        self.threadSafeConcurrentFrameArrayConcurrentQueue.sync { () -> Void in
             frame = self.consecutiveFrames[index];
         };
         
         return frame;
     }
     
-    private func removeFrame(index : Int)
+    fileprivate func removeFrame(_ index : Int)
     {
-        dispatch_barrier_async(self.threadSafeConcurrentFrameArrayConcurrentQueue) { () -> Void in
-            self.consecutiveFrames.removeAtIndex(index);
-        };
+        self.threadSafeConcurrentFrameArrayConcurrentQueue.async(flags: .barrier, execute: { () -> Void in
+            self.consecutiveFrames.remove(at: index);
+        }) ;
     }
     
-    private func appendFrame(frame : OSBaseFrame)
+    fileprivate func appendFrame(_ frame : OSBaseFrame)
     {
-        dispatch_barrier_async(self.threadSafeConcurrentFrameArrayConcurrentQueue) { () -> Void in
+        self.threadSafeConcurrentFrameArrayConcurrentQueue.async(flags: .barrier, execute: { () -> Void in
             self.consecutiveFrames.append(frame);
-        };
+        }) ;
     }
     
 // MARK: Lifecycle
@@ -124,39 +124,41 @@ class OSScannerManager : OS3DFrameConsumerProtocol
     @param frame the frame that will be calibrated and put into the scanning process
     @abstract this methd is consist of single frame calibration and image surf feature extractions
     */
-    private func startSingleFrameOperations(frame : OSBaseFrame)
+    fileprivate func startSingleFrameOperations(_ frame : OSBaseFrame)
     {
-        dispatch_semaphore_wait(self.calibrationSemaphore, DISPATCH_TIME_FOREVER);
+        self.calibrationSemaphore.wait(timeout: DispatchTime.distantFuture);
         self.appendFrame(frame);
         
         // calibrating the frame
         
         frame.preparePointCloud {[unowned self] () -> Void in
-            let matchCoordinatesIn2D: NSArray? = OSImageFeatureMatcher.sharedInstance().matchImage(frame.image);
-            if (matchCoordinatesIn2D?.count > kOSScannerManagerMinNumberOfMatchesForRegistrationProcess && !self.isThisTheFirstTime)
+            let matchCoordinatesIn2D: NSArray? = OSImageFeatureMatcher.sharedInstance().match(frame.image);
+            if let matchCoordinatesIn2D = matchCoordinatesIn2D,
+                (matchCoordinatesIn2D.count > kOSScannerManagerMinNumberOfMatchesForRegistrationProcess && !self.isThisTheFirstTime)
             {
                 let trainFrame = self.frameAtIndex(self.consecutiveFrames.count - 1 - 1);
 
                 var matchesIn3D = NSMutableArray();
                 
                 var matchIn2D: OSMatch = OSMatch();
-                for (var i: Int = 0; i < matchCoordinatesIn2D?.count; i++)
+                let count = matchCoordinatesIn2D.count
+                for i: Int in 0..<count
                 {
-                    let val: NSValue? = matchCoordinatesIn2D?.objectAtIndex(i) as? NSValue;
+                    let val: NSValue? = matchCoordinatesIn2D.object(at: i) as? NSValue;
                     val?.getValue(&matchIn2D);
                     let trainImageIndex = (Int)(matchIn2D.trainPoint.y) * frame.width + (Int)(matchIn2D.trainPoint.x);
                     let queryImageIndex = (Int)(matchIn2D.queryPoint.y) * frame.width + (Int)(matchIn2D.queryPoint.x);
                     if (frame.pointCloud[queryImageIndex].isValid() && trainFrame.pointCloud[trainImageIndex].isValid())
                     {
                         var singleMatch: OSMatch3D = OSMatch3D(queryPoint: frame.pointCloud[queryImageIndex].point, trainPoint: trainFrame.pointCloud[trainImageIndex].point);
-                        let singleMatchData: NSData = NSData(bytes: &singleMatch, length: sizeof(OSMatch3D));
-                        matchesIn3D.addObject(singleMatchData);
+                        let singleMatchData: Data = Data(bytes: &singleMatch, count: MemoryLayout<OSMatch3D>.size);
+                        matchesIn3D.add(singleMatchData);
                     }
                 }
                 
-                let transformationMatrixData: NSData = OSRegistrationUtility.createTransformationMatrixWithMatches(matchesIn3D as [AnyObject]);
+                let transformationMatrixData: Data = OSRegistrationUtility.createTransformationMatrix(withMatches: matchesIn3D as [AnyObject]);
                 var transformationMatrix: Matrix4 = Matrix4.Identity;
-                transformationMatrixData.getBytes(&transformationMatrix, length: sizeof(Matrix4));
+                (transformationMatrixData as NSData).getBytes(&transformationMatrix, length: MemoryLayout<Matrix4>.size);
                 
                 frame.transformationMatrix = trainFrame.transformationMatrix * transformationMatrix;
                 
@@ -170,42 +172,42 @@ class OSScannerManager : OS3DFrameConsumerProtocol
                 self.delegate?.scannerManagerDidPreparedFrame(self, frame: frame);
             }
             
-            dispatch_semaphore_signal(self.calibrationSemaphore);
+            self.calibrationSemaphore.signal();
         };
     }
     
     /**
     @abstract this method will process the consecutive frames
     */
-    private func startConsecutiveFrameOperations()
+    fileprivate func startConsecutiveFrameOperations()
     {
         
     }
     
 // MARK: Privates
     
-    private func startLoadingContent()
+    fileprivate func startLoadingContent()
     {
         OSTimer.tic();
         self.state = .ContentLoading;
-        let contentLoadingGroup : dispatch_group_t = dispatch_group_create();
+        let contentLoadingGroup : DispatchGroup = DispatchGroup();
         
-        dispatch_group_enter(contentLoadingGroup);
+        contentLoadingGroup.enter();
         OSCameraFrameProviderSwift.loadContent { () -> Void in
-            dispatch_group_leave(contentLoadingGroup);
+            contentLoadingGroup.leave();
         };
         
-        dispatch_group_enter(contentLoadingGroup);
+        contentLoadingGroup.enter();
         OSBaseFrame.loadContent { () -> Void in
-            dispatch_group_leave(contentLoadingGroup);
+            contentLoadingGroup.leave();
         };
         
-        dispatch_group_enter(contentLoadingGroup);
+        contentLoadingGroup.enter();
         OSPointCloudView.loadContent { () -> Void in
-            dispatch_group_leave(contentLoadingGroup);
+            contentLoadingGroup.leave();
         };
         
-        dispatch_group_notify(contentLoadingGroup, dispatch_get_main_queue()) { () -> Void in
+        contentLoadingGroup.notify(queue: DispatchQueue.main) { () -> Void in
             OSTimer.toc("content loaded");
             self.state = .ContentLoaded;
         };
@@ -214,10 +216,10 @@ class OSScannerManager : OS3DFrameConsumerProtocol
 // MARK: Utilities
     
 // MARK: OS3DFrameConsumerProtocol
-    func didCapturedFrame(image: UIImage, depthFrame: [Float])
+    func didCapturedFrame(_ image: UIImage, depthFrame: [Float])
     {
         let capturedFrame : OSBaseFrame = OSBaseFrame(image: image, depth: depthFrame);
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0)) { () -> Void in
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive).async { () -> Void in
             self.startSingleFrameOperations(capturedFrame);
         };
     }

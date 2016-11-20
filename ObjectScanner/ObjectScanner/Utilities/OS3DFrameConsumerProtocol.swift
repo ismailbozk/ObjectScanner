@@ -27,5 +27,5 @@ import UIKit
 
 protocol OS3DFrameConsumerProtocol:class
 {
-    func didCapturedFrame(image : UIImage, depthFrame: [Float]);
+    func didCapturedFrame(_ image : UIImage, depthFrame: [Float]);
 }

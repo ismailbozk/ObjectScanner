@@ -23,6 +23,8 @@
 //
 
 import UIKit
+import Metal
+import QuartzCore
 
 struct Uniforms {
     var viewMatrix : Matrix4 = Matrix4.Identity;
@@ -36,48 +38,48 @@ let kOSPointCloudViewXAxis: Vector3 = Vector3(1.0, 0.0, 0.0);
 let kOSPointCloudViewYAxis: Vector3 = Vector3(0.0, 1.0, 0.0);
 
 class OSPointCloudView: UIView, OSContentLoadingProtocol{
-    private let panGestureRecognizer: UIGestureRecognizer = UIPanGestureRecognizer();
-    private var angularVelocity: CGPoint = CGPointZero;
-    private var angle: CGPoint = CGPointZero;
-    private var lastFrameTime: NSTimeInterval = 0.0;
+    fileprivate let panGestureRecognizer: UIGestureRecognizer = UIPanGestureRecognizer();
+    fileprivate var angularVelocity: CGPoint = CGPoint.zero;
+    fileprivate var angle: CGPoint = CGPoint.zero;
+    fileprivate var lastFrameTime: TimeInterval = 0.0;
     
-    private var metalLayer: CAMetalLayer! = nil;
+    fileprivate var metalLayer: CAMetalLayer! = nil;
     
-    private static let device: MTLDevice = MTLCreateSystemDefaultDevice()!;
-    private static let commandQueue: MTLCommandQueue = OSPointCloudView.device.newCommandQueue();
-    private static var pipelineState: MTLRenderPipelineState?;
-    private static var depthStencilState: MTLDepthStencilState?;
-    private var timer: CADisplayLink?;
+    fileprivate static let device: MTLDevice = MTLCreateSystemDefaultDevice()!;
+    fileprivate static let commandQueue: MTLCommandQueue = OSPointCloudView.device.makeCommandQueue();
+    fileprivate static var pipelineState: MTLRenderPipelineState?;
+    fileprivate static var depthStencilState: MTLDepthStencilState?;
+    fileprivate var timer: CADisplayLink?;
     
-    private var isReadForAction = false;
+    fileprivate var isReadForAction = false;
     
-    private var vertices: [OSPoint] = [OSPoint]();
-    private let threadSafeConcurrentVertexAccessQueue = dispatch_queue_create("OSPointCloudViewThreadSafeConcurrentVertexAccessQueue", DISPATCH_QUEUE_CONCURRENT);
-    private var vertexBuffer: MTLBuffer?;
-    private let threadSafeConcurrentVertexBufferAccessQueue : dispatch_queue_t = dispatch_queue_create("OSPointCloudViewThreadSafeConcurrentVertexBufferAccessQueue", DISPATCH_QUEUE_CONCURRENT);//don't use that queue anywhere else other than custom getters and setters for vertexBuffer property.
+    fileprivate var vertices: [OSPoint] = [OSPoint]();
+    fileprivate let threadSafeConcurrentVertexAccessQueue = DispatchQueue(label: "OSPointCloudViewThreadSafeConcurrentVertexAccessQueue", attributes: DispatchQueue.Attributes.concurrent);
+    fileprivate var vertexBuffer: MTLBuffer?;
+    fileprivate let threadSafeConcurrentVertexBufferAccessQueue : DispatchQueue = DispatchQueue(label: "OSPointCloudViewThreadSafeConcurrentVertexBufferAccessQueue", attributes: DispatchQueue.Attributes.concurrent);//don't use that queue anywhere else other than custom getters and setters for vertexBuffer property.
 
-    private var transformationMatrices: [Matrix4] = [Matrix4]();
-    private var transformationBuffer: MTLBuffer?;
-    private let threadSafeConcurrentTransformationBufferAccessQueue : dispatch_queue_t = dispatch_queue_create("OSPointCloudViewThreadSafeConcurrentTransformationBufferAccessQueue", DISPATCH_QUEUE_CONCURRENT);//don't use that queue anywhere else other than custom getters and setters for transformationBuffer property.
+    fileprivate var transformationMatrices: [Matrix4] = [Matrix4]();
+    fileprivate var transformationBuffer: MTLBuffer?;
+    fileprivate let threadSafeConcurrentTransformationBufferAccessQueue : DispatchQueue = DispatchQueue(label: "OSPointCloudViewThreadSafeConcurrentTransformationBufferAccessQueue", attributes: DispatchQueue.Attributes.concurrent);//don't use that queue anywhere else other than custom getters and setters for transformationBuffer property.
     
-    private var uniforms: Uniforms = Uniforms();
-    private var uniformBuffer: MTLBuffer?;
+    fileprivate var uniforms: Uniforms = Uniforms();
+    fileprivate var uniformBuffer: MTLBuffer?;
     
 // MARK: Lifecycle
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
         
-        panGestureRecognizer.addTarget(self, action: Selector("gestureRecognizerDidRecognize:"));
+        panGestureRecognizer.addTarget(self, action: #selector(OSPointCloudView.gestureRecognizerDidRecognize(_:)));
         self .addGestureRecognizer(panGestureRecognizer);
         
         metalLayer = (self.layer as! CAMetalLayer);
         
         metalLayer.device = OSPointCloudView.device;
-        metalLayer.pixelFormat = .BGRA8Unorm;
+        metalLayer.pixelFormat = .bgra8Unorm;
         metalLayer.framebufferOnly = true;
         
-        timer = CADisplayLink(target: self, selector: Selector("tic:"))
-        timer!.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
+        timer = CADisplayLink(target: self, selector: #selector(OSPointCloudView.tic(_:)))
+        timer!.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
         
         self.lastFrameTime = CFAbsoluteTimeGetCurrent();
     }
@@ -86,8 +88,8 @@ class OSPointCloudView: UIView, OSContentLoadingProtocol{
         didSet {
             if (self.metalLayer != nil)
             {
-                let scale : CGFloat = UIScreen.mainScreen().scale;
-                self.metalLayer.drawableSize = CGSizeMake(self.bounds.width * scale, self.bounds.height * scale);
+                let scale : CGFloat = UIScreen.main.scale;
+                self.metalLayer.drawableSize = CGSize(width: self.bounds.width * scale, height: self.bounds.height * scale);
             }
         }
     }
@@ -97,14 +99,14 @@ class OSPointCloudView: UIView, OSContentLoadingProtocol{
         self.timer?.invalidate();
     }
     
-    override class func layerClass() -> AnyClass
+    override class var layerClass : AnyClass
     {
         return CAMetalLayer.self;
     }
     
 // MARK: Display methods
     
-    func tic(displayLink: CADisplayLink)
+    func tic(_ displayLink: CADisplayLink)
     {
         if (self.isReadForAction == true)
         {
@@ -119,37 +121,37 @@ class OSPointCloudView: UIView, OSContentLoadingProtocol{
                 let vertexCount = self.getVertexArray()!.count;
                 let renderPassDescriptor = MTLRenderPassDescriptor();
                 renderPassDescriptor.colorAttachments[0].texture = drawable.texture;
-                renderPassDescriptor.colorAttachments[0].loadAction = .Clear
+                renderPassDescriptor.colorAttachments[0].loadAction = .clear
                 renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0);
-                renderPassDescriptor.colorAttachments[0].storeAction = .Store
+                renderPassDescriptor.colorAttachments[0].storeAction = .store
                 
-                let commandBuffer = OSPointCloudView.commandQueue.commandBuffer();
+                let commandBuffer = OSPointCloudView.commandQueue.makeCommandBuffer();
                 
-                let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor);
-                renderEncoder.setFrontFacingWinding(MTLWinding.CounterClockwise)
-                renderEncoder.setCullMode(MTLCullMode.Front);
+                let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor);
+                renderEncoder.setFrontFacing(MTLWinding.counterClockwise)
+                renderEncoder.setCullMode(MTLCullMode.front);
                 
                 renderEncoder.setRenderPipelineState(OSPointCloudView.pipelineState!);
                 
                 renderEncoder.setDepthStencilState(OSPointCloudView.depthStencilState);//this will prevents the points, that should appear farther away, to be drawn on top of the other points, which are closer to the camera.
                 
-                renderEncoder.setVertexBuffer(tempVertexBuffer, offset: 0, atIndex: 0);
+                renderEncoder.setVertexBuffer(tempVertexBuffer, offset: 0, at: 0);
                 
-                renderEncoder.setVertexBuffer(tempTransformationBuffer, offset: 0, atIndex: 2);
+                renderEncoder.setVertexBuffer(tempTransformationBuffer, offset: 0, at: 2);
                 
-                renderEncoder.setVertexBuffer(self.uniformBuffer, offset: 0, atIndex: 1);
+                renderEncoder.setVertexBuffer(self.uniformBuffer, offset: 0, at: 1);
                 
-                renderEncoder.drawPrimitives(MTLPrimitiveType.Point, vertexStart: 0, vertexCount: vertexCount);
+                renderEncoder.drawPrimitives(type: MTLPrimitiveType.point, vertexStart: 0, vertexCount: vertexCount);
                 renderEncoder.endEncoding();
                 
                 
-                commandBuffer.presentDrawable(drawable);
+                commandBuffer.present(drawable);
                 commandBuffer.commit()
             }
         }
     }
     
-    private func updateMotion()
+    fileprivate func updateMotion()
     {
         let frameTime = CFAbsoluteTimeGetCurrent();
         let frameDuration =  CGFloat(frameTime - self.lastFrameTime);
@@ -157,12 +159,12 @@ class OSPointCloudView: UIView, OSContentLoadingProtocol{
         
         if (frameDuration > 0.0)
         {
-            self.angle = CGPointMake(self.angle.x + self.angularVelocity.x * frameDuration, self.angle.y + self.angularVelocity.y * frameDuration);
-            self.angularVelocity = CGPointMake(self.angularVelocity.x * (1 - kOSPointCloudViewDamping), self.angularVelocity.y * (1 - kOSPointCloudViewDamping));
+            self.angle = CGPoint(x: self.angle.x + self.angularVelocity.x * frameDuration, y: self.angle.y + self.angularVelocity.y * frameDuration);
+            self.angularVelocity = CGPoint(x: self.angularVelocity.x * (1 - kOSPointCloudViewDamping), y: self.angularVelocity.y * (1 - kOSPointCloudViewDamping));
         }
     }
     
-    private func updateUniforms()
+    fileprivate func updateUniforms()
     {
         var viewMatrix = Matrix4.Identity;
         
@@ -182,7 +184,7 @@ class OSPointCloudView: UIView, OSContentLoadingProtocol{
         
         self.uniforms = uniforms;
         
-        self.uniformBuffer = OSPointCloudView.device.newBufferWithBytes(&self.uniforms, length: sizeof(Uniforms), options:MTLResourceOptions.CPUCacheModeDefaultCache);
+        self.uniformBuffer = OSPointCloudView.device.makeBuffer(bytes: &self.uniforms, length: MemoryLayout<Uniforms>.size, options:MTLResourceOptions.cpuCacheModeWriteCombined);
     }
 
 // MARK: Custom Getter/Setters
@@ -190,7 +192,7 @@ class OSPointCloudView: UIView, OSContentLoadingProtocol{
     func getVertexBuffer() -> MTLBuffer?
     {
         var vertexBuffer : MTLBuffer?;
-        dispatch_sync(self.threadSafeConcurrentVertexBufferAccessQueue) { () -> Void in
+        (self.threadSafeConcurrentVertexBufferAccessQueue).sync { () -> Void in
             vertexBuffer = self.vertexBuffer;
         };
         return vertexBuffer;
@@ -199,63 +201,63 @@ class OSPointCloudView: UIView, OSContentLoadingProtocol{
     func getTransformationBuffer() -> MTLBuffer?
     {
         var transformationBuffer: MTLBuffer?;
-        dispatch_sync(self.threadSafeConcurrentTransformationBufferAccessQueue) { () -> Void in
+        (self.threadSafeConcurrentTransformationBufferAccessQueue).sync { () -> Void in
             transformationBuffer = self.transformationBuffer;
         };
         return transformationBuffer;
     }
     
-    func setVertexBuffers(vertexBuffer vertexBuffer: MTLBuffer, transformationBuffer: MTLBuffer)
+    func setVertexBuffers(vertexBuffer: MTLBuffer, transformationBuffer: MTLBuffer)
     {
-        dispatch_barrier_async(self.threadSafeConcurrentVertexBufferAccessQueue) { () -> Void in
+        self.threadSafeConcurrentVertexBufferAccessQueue.async(flags: .barrier, execute: { () -> Void in
             self.vertexBuffer = vertexBuffer;
             self.transformationBuffer = transformationBuffer;
-        };
+        }) ;
     }
     
     func getVertexArray() -> [OSPoint]?
     {
         var vertexArray: [OSPoint]?
-        dispatch_sync(self.threadSafeConcurrentVertexAccessQueue) { () -> Void in
+        self.threadSafeConcurrentVertexAccessQueue.sync { () -> Void in
             vertexArray = self.vertices;
         }
         return vertexArray;
     }
 
-    func setVertexArray(vertexArray: [OSPoint])
+    func setVertexArray(_ vertexArray: [OSPoint])
     {
-        dispatch_barrier_async(self.threadSafeConcurrentVertexAccessQueue) { () -> Void in
+        self.threadSafeConcurrentVertexAccessQueue.async(flags: .barrier, execute: { () -> Void in
             self.vertices = vertexArray;
-        };
+        }) ;
     }
     
 // MARK: Publics
     
-    func appendFrame(frame: OSBaseFrame)
+    func appendFrame(_ frame: OSBaseFrame)
     {
             self.transformationMatrices.append(frame.transformationMatrix);
-            let transformationBuffer = OSPointCloudView.device.newBufferWithBytes(self.transformationMatrices, length: self.transformationMatrices.count * sizeof(Matrix4), options: []);
+            let transformationBuffer = OSPointCloudView.device.makeBuffer(bytes: self.transformationMatrices, length: self.transformationMatrices.count * MemoryLayout<Matrix4>.size, options: []);
             
 //            self.setVertexArray(self.vertices + frame.pointCloud);
             self.vertices += frame.pointCloud;
             
-            let vertexBuffer = OSPointCloudView.device.newBufferWithBytes(self.getVertexArray()!, length: self.getVertexArray()!.count * sizeof(OSPoint), options: []);
+            let vertexBuffer = OSPointCloudView.device.makeBuffer(bytes: self.getVertexArray()!, length: self.getVertexArray()!.count * MemoryLayout<OSPoint>.size, options: []);
             self.setVertexBuffers(vertexBuffer: vertexBuffer, transformationBuffer: transformationBuffer);
         self.isReadForAction = true;
     }
     
 // MARK: Gesture Recogniser
-    func gestureRecognizerDidRecognize(recogniser : UIPanGestureRecognizer)
+    func gestureRecognizerDidRecognize(_ recogniser : UIPanGestureRecognizer)
     {
-        let velocity: CGPoint = recogniser.velocityInView(self);
-        self.angularVelocity = CGPointMake(velocity.x * kOSPointCloudViewVelocityScale, velocity.y * kOSPointCloudViewVelocityScale);
+        let velocity: CGPoint = recogniser.velocity(in: self);
+        self.angularVelocity = CGPoint(x: velocity.x * kOSPointCloudViewVelocityScale, y: velocity.y * kOSPointCloudViewVelocityScale);
     }
     
 // MARK: OSContentLoadingProtocol
     
-    static func loadContent(completionHandler: (() -> Void)!)
+    static func loadContent(_ completionHandler: (() -> Void)!)
     {
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0)) { () -> Void in
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive).async { () -> Void in
             OSPointCloudView.device;
             
             OSPointCloudView.commandQueue;
@@ -263,16 +265,16 @@ class OSPointCloudView: UIView, OSContentLoadingProtocol{
             if (OSPointCloudView.pipelineState == nil)
             {
                 let defaultLibrary = OSPointCloudView.device.newDefaultLibrary();
-                let vertexFunction = defaultLibrary!.newFunctionWithName("pointCloudVertex");
-                let fragmentFunction = defaultLibrary!.newFunctionWithName("pointCloudFragment");
+                let vertexFunction = defaultLibrary!.makeFunction(name: "pointCloudVertex");
+                let fragmentFunction = defaultLibrary!.makeFunction(name: "pointCloudFragment");
                 
                 let pipelineStateDescriptor = MTLRenderPipelineDescriptor();
                 pipelineStateDescriptor.vertexFunction = vertexFunction;
                 pipelineStateDescriptor.fragmentFunction = fragmentFunction;
-                pipelineStateDescriptor.colorAttachments[0].pixelFormat = .BGRA8Unorm;
+                pipelineStateDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm;
                 
                 do{
-                    OSPointCloudView.pipelineState = try OSPointCloudView.device.newRenderPipelineStateWithDescriptor(pipelineStateDescriptor);
+                    OSPointCloudView.pipelineState = try OSPointCloudView.device.makeRenderPipelineState(descriptor: pipelineStateDescriptor);
                 } catch _ {
                     OSPointCloudView.pipelineState = nil;
                     print("Failed to create pipeline state.");
@@ -281,14 +283,14 @@ class OSPointCloudView: UIView, OSContentLoadingProtocol{
                 
                 
                 let depthStencilDescriptor: MTLDepthStencilDescriptor = MTLDepthStencilDescriptor();
-                depthStencilDescriptor.depthCompareFunction = MTLCompareFunction.Less;
+                depthStencilDescriptor.depthCompareFunction = MTLCompareFunction.less;
                 
-                depthStencilDescriptor.depthWriteEnabled = true;
+                depthStencilDescriptor.isDepthWriteEnabled = true;
                 
-                OSPointCloudView.depthStencilState = OSPointCloudView.device.newDepthStencilStateWithDescriptor(depthStencilDescriptor);
+                OSPointCloudView.depthStencilState = OSPointCloudView.device.makeDepthStencilState(descriptor: depthStencilDescriptor);
 
             }
-            dispatch_sync(dispatch_get_main_queue()) { () -> Void in
+            DispatchQueue.main.sync { () -> Void in
                 completionHandler?();
             };
         };

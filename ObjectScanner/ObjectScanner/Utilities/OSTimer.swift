@@ -30,7 +30,7 @@ class OSTimer: NSObject {
         lastTicTime = CACurrentMediaTime();
     }
     
-    class func toc(tag : String)
+    class func toc(_ tag : String)
     {
         print("\((CACurrentMediaTime() - lastTicTime) * 1000) ms. Task: \(tag)");
     }

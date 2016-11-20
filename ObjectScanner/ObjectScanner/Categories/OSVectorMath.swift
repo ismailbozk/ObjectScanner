@@ -24,7 +24,7 @@
 
 extension Matrix4
 {
-    static func rotation(axis axis: Vector3, angle: Scalar) -> Matrix4
+    static func rotation(axis: Vector3, angle: Scalar) -> Matrix4
     {
         let c: Scalar = cos(angle);
         let s: Scalar = sin(angle);
@@ -61,7 +61,7 @@ extension Matrix4
         return rotationMatrix;
     }
     
-    static func perspectiveProjection(aspect aspect: Float, fovy: Float, near: Float, far: Float) -> Matrix4
+    static func perspectiveProjection(aspect: Float, fovy: Float, near: Float, far: Float) -> Matrix4
     {
         let yScale: Float = 1 / tan(fovy * 0.5);
         let xScale: Float = yScale / aspect;
@@ -86,7 +86,7 @@ extension Matrix4
 
 extension Float
 {
-    static func degToRad(degree: Float) -> Float
+    static func degToRad(_ degree: Float) -> Float
     {
         return degree * (Float(M_PI) / 180.0);
     }

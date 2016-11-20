@@ -37,24 +37,24 @@ class OSOpeningViewController: OSViewController, OSScannerManagerDelegate {
         OSScannerManager.sharedInstance.delegate = self;
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated);
         
         OSScannerManager.sharedInstance;    //this will trigger content loading
         self.startLoading();
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:Selector("scannerManagerStatusDidLoadContent"), name: OSScannerManagerState.ContentLoaded.rawValue, object: nil);
+        NotificationCenter.default.addObserver(self, selector:#selector(OSOpeningViewController.scannerManagerStatusDidLoadContent), name: NSNotification.Name(rawValue: OSScannerManagerState.ContentLoaded.rawValue), object: nil);
     }
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidAppear(animated);
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: OSScannerManagerState.ContentLoaded.rawValue, object: nil);
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: OSScannerManagerState.ContentLoaded.rawValue), object: nil);
     }
     
 // MARK: Actions
-    @IBAction func startScanning(sender: AnyObject)
+    @IBAction func startScanning(_ sender: AnyObject)
     {
         OSScannerManager.sharedInstance.startSimulating();
-        self.startScanningButton.enabled = false;
+        self.startScanningButton.isEnabled = false;
     }
     
 // MARK: OSScannerManager Utilities
@@ -66,7 +66,7 @@ class OSOpeningViewController: OSViewController, OSScannerManagerDelegate {
     
 // MARK: OSScannerManagerDelegate
     
-    func scannerManagerDidPreparedFrame(scannerManager: OSScannerManager, frame: OSBaseFrame)
+    func scannerManagerDidPreparedFrame(_ scannerManager: OSScannerManager, frame: OSBaseFrame)
     {
         self.pointCloudView.appendFrame(frame);
     }

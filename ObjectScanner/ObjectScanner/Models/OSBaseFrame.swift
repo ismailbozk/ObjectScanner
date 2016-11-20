@@ -24,6 +24,7 @@
 
 import UIKit
 import simd
+import Metal
 
 /// Single point representaion in 3D space. Look also Shared.h.
 
@@ -56,7 +57,7 @@ class OSBaseFrame : OSContentLoadingProtocol{
         }
     }
     /// Raw depth frame
-    private var notCalibratedDepth: [Float];
+    fileprivate var notCalibratedDepth: [Float];
     /// Calibrated but not transformed point cloud in 3D space
     var pointCloud: [OSPoint];
     /// Transformation matrix of the current frame in 3D space. This matrix trnasforms the current point cloud respect to the initial frame.
@@ -70,7 +71,7 @@ class OSBaseFrame : OSContentLoadingProtocol{
         
         self.image = image;
         self.notCalibratedDepth = depth;
-        self.pointCloud = [OSPoint](count: size, repeatedValue: OSPoint());
+        self.pointCloud = [OSPoint](repeating: OSPoint(), count: size);
     }
     
 //    subscript(row : Int, col : Int) -> OSPoint{
@@ -84,40 +85,40 @@ class OSBaseFrame : OSContentLoadingProtocol{
     
 //MARK: Metal
     
-    static private let device : MTLDevice = MTLCreateSystemDefaultDevice()!;
-    static private let commandQueue : MTLCommandQueue = device.newCommandQueue();
-    static private let defaultLibrary : MTLLibrary = device.newDefaultLibrary()!;
-    static private let calibrateFrameFunction : MTLFunction = defaultLibrary.newFunctionWithName("calibrateFrame")!;
-    static private var metalComputePipelineState : MTLComputePipelineState?;//very costly
+    static fileprivate let device : MTLDevice = MTLCreateSystemDefaultDevice()!;
+    static fileprivate let commandQueue : MTLCommandQueue = device.makeCommandQueue();
+    static fileprivate let defaultLibrary : MTLLibrary = device.newDefaultLibrary()!;
+    static fileprivate let calibrateFrameFunction : MTLFunction = defaultLibrary.makeFunction(name: "calibrateFrame")!;
+    static fileprivate var metalComputePipelineState : MTLComputePipelineState?;//very costly
     
-    static private var calibrationMatrixBuffer : MTLBuffer?;
+    static fileprivate var calibrationMatrixBuffer : MTLBuffer?;
     
-    private var commandBuffer : MTLCommandBuffer?;
-    private var computeCommandEncoder : MTLComputeCommandEncoder?;
+    fileprivate var commandBuffer : MTLCommandBuffer?;
+    fileprivate var computeCommandEncoder : MTLComputeCommandEncoder?;
     
-    func preparePointCloud(completionHandler : (() -> Void)!)
+    func preparePointCloud(_ completionHandler : (() -> Void)!)
     {
         let startTime = CACurrentMediaTime();
         
-        self.commandBuffer = OSBaseFrame.commandQueue.commandBuffer();
+        self.commandBuffer = OSBaseFrame.commandQueue.makeCommandBuffer();
         
-        self.computeCommandEncoder = self.commandBuffer?.computeCommandEncoder();
+        self.computeCommandEncoder = self.commandBuffer?.makeComputeCommandEncoder();
         
         self.computeCommandEncoder?.setComputePipelineState(OSBaseFrame.metalComputePipelineState!);
         
         //pass the data to GPU
         let dataSize : Int = self.notCalibratedDepth.count//self.height * self.width;
 
-        let imageTextureBuffer = OSTextureProvider.textureWithImage(self.image, device: OSBaseFrame.device);
-        self.computeCommandEncoder?.setTexture(imageTextureBuffer, atIndex: 0);
+        let imageTextureBuffer = OSTextureProvider.texture(with: self.image, device: OSBaseFrame.device);
+        self.computeCommandEncoder?.setTexture(imageTextureBuffer, at: 0);
         
-        let inputByteLength = dataSize * sizeof(Float);
-        let inVectorBuffer = OSBaseFrame.device.newBufferWithBytes(&self.notCalibratedDepth, length: inputByteLength, options:[]);
-        self.computeCommandEncoder?.setBuffer(inVectorBuffer, offset: 0, atIndex: 0);
-        let outputByteLength = dataSize * sizeof(OSPoint);
-        let outputBuffer = OSBaseFrame.device.newBufferWithBytes(&self.pointCloud, length: outputByteLength, options: []);
-        self.computeCommandEncoder?.setBuffer(outputBuffer, offset: 0, atIndex: 1);
-        self.computeCommandEncoder?.setBuffer(OSBaseFrame.calibrationMatrixBuffer, offset: 0, atIndex: 2);
+        let inputByteLength = dataSize * MemoryLayout<Float>.size;
+        let inVectorBuffer = OSBaseFrame.device.makeBuffer(bytes: &self.notCalibratedDepth, length: inputByteLength, options:[]);
+        self.computeCommandEncoder?.setBuffer(inVectorBuffer, offset: 0, at: 0);
+        let outputByteLength = dataSize * MemoryLayout<OSPoint>.size;
+        let outputBuffer = OSBaseFrame.device.makeBuffer(bytes: &self.pointCloud, length: outputByteLength, options: []);
+        self.computeCommandEncoder?.setBuffer(outputBuffer, offset: 0, at: 1);
+        self.computeCommandEncoder?.setBuffer(OSBaseFrame.calibrationMatrixBuffer, offset: 0, at: 2);
         
         //prepare thread groups
         let threadGroupCountX = dataSize / 512;
@@ -129,7 +130,7 @@ class OSBaseFrame : OSContentLoadingProtocol{
         self.computeCommandEncoder?.endEncoding();
         
         self.commandBuffer?.addCompletedHandler({[unowned self] (commandBuffer : MTLCommandBuffer) -> Void in
-            let data = NSData(bytesNoCopy: outputBuffer.contents(), length: (self.pointCloud.count) * sizeof(OSPoint), freeWhenDone: false);
+            let data = NSData(bytesNoCopy: outputBuffer.contents(), length: (self.pointCloud.count) * MemoryLayout<OSPoint>.size, freeWhenDone: false);
             data.getBytes(&self.pointCloud, length: outputByteLength);
             
             let elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;
@@ -143,29 +144,29 @@ class OSBaseFrame : OSContentLoadingProtocol{
     
 // MARK: OSContentLoadingProtocol
 
-    static func loadContent(completionHandler : (() -> Void)!)
+    static func loadContent(_ completionHandler : (() -> Void)!)
     {
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0)) { () -> Void in
-            OSBaseFrame.device ;
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive).async { () -> Void in
+            OSBaseFrame.device
             
-            OSBaseFrame.commandQueue ;
+            OSBaseFrame.commandQueue
             
-            OSBaseFrame.defaultLibrary ;
+            OSBaseFrame.defaultLibrary
             
-            OSBaseFrame.calibrateFrameFunction ;
+            OSBaseFrame.calibrateFrameFunction
             
-            let calibrationMatrixBtyeLength = calibrationMatrix.count * sizeof(Float);
-            calibrationMatrixBuffer = OSBaseFrame.device.newBufferWithBytes(&calibrationMatrix, length: calibrationMatrixBtyeLength, options: []);
+            let calibrationMatrixBtyeLength = calibrationMatrix.count * MemoryLayout<Float>.size;
+            calibrationMatrixBuffer = OSBaseFrame.device.makeBuffer(bytes: &calibrationMatrix, length: calibrationMatrixBtyeLength, options: []);
             
             if (OSBaseFrame.metalComputePipelineState == nil)
             {
                 do{
-                    OSBaseFrame.metalComputePipelineState = try OSBaseFrame.device.newComputePipelineStateWithFunction(OSBaseFrame.calibrateFrameFunction);
+                    OSBaseFrame.metalComputePipelineState = try OSBaseFrame.device.makeComputePipelineState(function: OSBaseFrame.calibrateFrameFunction);
                 } catch _ {
                     OSBaseFrame.metalComputePipelineState = nil
                 };
             }
-            dispatch_sync(dispatch_get_main_queue()) { () -> Void in
+            DispatchQueue.main.sync { () -> Void in
                 completionHandler?();
             };
         };

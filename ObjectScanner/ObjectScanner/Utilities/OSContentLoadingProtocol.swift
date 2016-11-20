@@ -26,5 +26,5 @@ import Foundation
 
 protocol OSContentLoadingProtocol : class
 {
-    static func loadContent(completionHandler : (() -> Void)!);
+    static func loadContent(_ completionHandler : (() -> Void)!);
 }

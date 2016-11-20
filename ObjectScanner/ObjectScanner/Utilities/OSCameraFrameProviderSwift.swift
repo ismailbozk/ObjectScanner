@@ -32,10 +32,10 @@ struct DepthFrame {
     init(rows : Int, cols : Int){
         self.rows = rows;
         self.cols = cols;
-        self.depthFrame = [Float](count: rows * cols, repeatedValue: -1.0);
+        self.depthFrame = [Float](repeating: -1.0, count: rows * cols);
     }
     
-    func indexIsValidForRow(row: Int, col: Int) -> Bool {
+    func indexIsValidForRow(_ row: Int, col: Int) -> Bool {
         return row >= 0 && row < rows && col >= 0 && col < cols
     }
     
@@ -66,8 +66,8 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
     
 // MARK: Publics
     
-    override func prepareFramesWithCompletion(completion: (() -> Void)!) {
-        super.prepareFramesWithCompletion({[unowned self] () -> Void in
+    override func prepareFrames(completion: (() -> Void)!) {
+        super.prepareFrames(completion: {[unowned self] () -> Void in
             let startTime = CACurrentMediaTime();
 
 //            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes1"));
@@ -80,27 +80,27 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
             
             print("depth frames read in \(elapsedTime) seconds")
 
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            DispatchQueue.main.async(execute: { () -> Void in
                 completion();
             })
         });
     }
     
     func startSimulatingFrameCaptures() {
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), { () -> Void in
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive).async(execute: { () -> Void in
             self.broadcastFrameAtIndex(0, toIndex: self.depthFrames.count - 1, completion: nil);
         });
     }
     
 // MARK: Utilities
     
-    func broadcastFrameAtIndex(index : Int, toIndex : Int, completion: (() -> Void)?)
+    func broadcastFrameAtIndex(_ index : Int, toIndex : Int, completion: (() -> Void)?)
     {
-        dispatch_sync(dispatch_get_main_queue(), { () -> Void in
+        DispatchQueue.main.sync(execute: { () -> Void in
             self.delegate?.didCapturedFrame(self.images[index] as! UIImage, depthFrame: self.depthFrames[index].depthFrame);
         });
         
-        NSThread.sleepForTimeInterval(32.6 / 1000);//30 fps
+        Thread.sleep(forTimeInterval: 32.6 / 1000);//30 fps
         
         if (index == toIndex)
         {
@@ -112,11 +112,11 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
         }
     }
     
-    class private func stringForFile(fileName:String, fileExtension:String) -> String?{
-        let pathToFile : String! = NSBundle.mainBundle().pathForResource(fileName, ofType: fileExtension);
+    class fileprivate func stringForFile(_ fileName:String, fileExtension:String) -> String?{
+        let pathToFile : String! = Bundle.main.path(forResource: fileName, ofType: fileExtension);
         var fileString  : String?
         do {
-            fileString = try String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
+            fileString = try String(contentsOfFile: pathToFile, encoding: String.Encoding.utf8)
         } catch _ {
             fileString = nil
         };
@@ -124,7 +124,7 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
         return fileString;
     }
     
-    class private func depthFrameForFile (prefix:String) -> DepthFrame{
+    class fileprivate func depthFrameForFile (_ prefix:String) -> DepthFrame{
         let resourceFileName:String = String(format: "%@Depth", prefix);
         let fileString = self.stringForFile(resourceFileName, fileExtension: "csv");
         
@@ -133,7 +133,7 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
             NSLog("Error reading file");
         }
     
-        let depthValues : [String] = fileString!.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString:"\n;"));
+        let depthValues : [String] = fileString!.components(separatedBy: CharacterSet(charactersIn:"\n;"));
 
         let count = (imageSize.height.rawValue * imageSize.width.rawValue);
         
@@ -141,8 +141,7 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
         assert(count == depthValues.count , "depthFile and image size must be equal");
         
         var x: Int, y : Int, depth :Float;
-        for (var i : Int = 0; i < count; i++)
-        {
+        for i in 0..<count {
             x = i % imageSize.width.rawValue;
             y = i / imageSize.width.rawValue;
             depth = (depthValues[i] as NSString).floatValue;
@@ -154,8 +153,8 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
     
 // MARK: OSContentLoadingProtocol
     
-    static func loadContent(completionHandler : (() -> Void)!)
+    static func loadContent(_ completionHandler : (() -> Void)!)
     {
-        self.sharedInstance.prepareFramesWithCompletion(completionHandler);
+        self.sharedInstance.prepareFrames(completion: completionHandler);
     }
 }

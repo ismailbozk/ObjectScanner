@@ -68,7 +68,7 @@ struct OSMatch{
     
     init()
     {
-        trainPoint = CGPointMake(0.0, 0.0);
-        queryPoint = CGPointMake(0.0, 0.0);
+        trainPoint = CGPoint(x: 0.0, y: 0.0);
+        queryPoint = CGPoint(x: 0.0, y: 0.0);
     }
 }
