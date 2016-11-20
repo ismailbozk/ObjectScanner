@@ -27,6 +27,9 @@
 
 using namespace metal;
 
+// Check pin camera model
+// http://nicolas.burrus.name/index.php/Research/KinectCalibration
+
 constant float fx_rgb = 5.2921508098293293e+02f;
 constant float fy_rgb = 5.2556393630057437e+02f;
 constant float cx_rgb = 3.2894272028759258e+02f;
@@ -47,28 +50,37 @@ kernel void calibrateFrame(texture2d<float, access::read> image [[ texture(0) ]]
     {
         uint width = image.get_width();
         
-        //coordinates on depth frame
+        // STEP 1: Find 3D Depth point by using 2D depth coordintates
+        // Coordinates on depth frame
         uint x = id % width;
         uint y = id / width;
         
         //transform into 3D space
         float4 tempPoint;
         
+        //check out pinhole camera model
         tempPoint.z = depthValues[id] / 1000.f; // mm to meter
         tempPoint.x = ((x - cx_d) * tempPoint.z * fx_d);
         tempPoint.y = ((y - cy_d) * tempPoint.z * fy_d);
         tempPoint.w = 1.f;
         
-        //calibrate 3D point to rgb frame coordinates
-        tempPoint = calibrationMatrix * tempPoint;
         
-        //corresponding 2D rgb frame coordinates for calibrated 3D point
+        // STEP 2: Align/Calibrate 3D Depth point on 3D real point (where we hold RGB data)
+        // Calibrate 3D point to rgb frame coordinates
+        tempPoint = calibrationMatrix * tempPoint;
+        // Now depth and rgb camera 3D points are same
+        
+        
+        // STEP 3: Reverse Step 1 on RGB point
+        // Corresponding 2D rgb frame coordinates for calibrated 3D point
         float invZ = 1.f / tempPoint.z;
         
-        x = ((tempPoint.x * fx_rgb * invZ) + cx_rgb) + 3.0f;//+3 and + 14.7 are just minor tuning values, have no meaning other than that.
+        x = ((tempPoint.x * fx_rgb * invZ) + cx_rgb) + 3.0f;//+3 and - 14.7 are just minor tuning values, have no meaning other than that.
         y = ((tempPoint.y * fy_rgb * invZ) + cy_rgb) - 14.7f;
         
-        //the 3D points will be stored as y * width + x on 1D array.
+        
+        // STEP 4: store 3D points, so we can show them on device screen
+        // The 3D points will be stored as y * width + x on 1D array.
         if (x < width
             && y < image.get_height())
         {//if the corresponding point is in the rgb frame coordinates
