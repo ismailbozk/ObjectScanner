@@ -44,30 +44,6 @@
     return self;
 }
 
-#pragma mark - Publics
-
-- (void)prepareFramesWithCompletion:(void(^)())completion
-{
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
-        CFTimeInterval startTime = CACurrentMediaTime();
-
-//        [self.images addObject:[OSCameraFrameProvider imageForFilePrefix:@"boxes1"]];
-        [self.images addObject:[OSCameraFrameProvider imageForFilePrefix:@"boxes2"]];
-//        [self.images addObject:[OSCameraFrameProvider imageForFilePrefix:@"boxes3"]];
-        [self.images addObject:[OSCameraFrameProvider imageForFilePrefix:@"boxes4"]];
-//        [self.images addObject:[OSCameraFrameProvider imageForFilePrefix:@"boxes5"]];
-        
-        CFTimeInterval elapsedTime = CACurrentMediaTime() - startTime;
-        
-        NSLog(@"frames read in %f seconds" ,elapsedTime);
-        
-        if (completion)
-        {
-            completion();
-        }
-    });
-}
-
 #pragma mark - Utilities
 
 + (NSString *)stringForFile:(NSString *)fileName extension:(NSString *)extension

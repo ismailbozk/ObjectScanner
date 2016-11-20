@@ -26,8 +26,4 @@
 
 @interface OSCameraFrameProvider : NSObject
 
-@property (nonatomic, strong, readonly) NSMutableArray *images;
-
-- (void)prepareFramesWithCompletion:(void(^)())completion;
-
 @end

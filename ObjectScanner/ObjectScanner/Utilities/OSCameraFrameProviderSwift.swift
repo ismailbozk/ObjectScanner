@@ -53,11 +53,12 @@ struct DepthFrame {
 
 class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtocol{
     
-    static let sharedInstance = OSCameraFrameProviderSwift();
+    static let sharedInstance = OSCameraFrameProviderSwift()
     
-    weak var delegate : OS3DFrameConsumerProtocol?;
+    weak var delegate: OS3DFrameConsumerProtocol?
     
-    var depthFrames : [DepthFrame] = [DepthFrame]();
+    var depthFrames: [DepthFrame] = [DepthFrame]()
+    var images = [UIImage]()
 
     enum imageSize:Int{
         case width = 640
@@ -66,24 +67,22 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
     
 // MARK: Publics
     
-    override func prepareFrames(completion: (() -> Void)!) {
-        super.prepareFrames(completion: {[unowned self] () -> Void in
-            let startTime = CACurrentMediaTime();
-
-//            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes1"));
-            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes2"));
-//            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes3"));
-            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes4"));
-//            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes5"));
-
-            let elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;
-            
-            print("depth frames read in \(elapsedTime) seconds")
-
-            DispatchQueue.main.async(execute: { () -> Void in
-                completion();
-            })
-        });
+    func prepareFrames(completion: (() -> Void)!) {
+        let startTime = CACurrentMediaTime();
+        
+        prepareTestData(named: "boxes1")
+//        self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes2"));
+//        self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes3"));
+//        self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes4"));
+//        self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile("boxes5"));
+        
+        let elapsedTime : CFTimeInterval = CACurrentMediaTime() - startTime;
+        
+        print("depth frames read in \(elapsedTime) seconds")
+        
+        DispatchQueue.main.async(execute: { () -> Void in
+            completion();
+        })
     }
     
     func startSimulatingFrameCaptures() {
@@ -97,7 +96,7 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
     func broadcastFrameAtIndex(_ index : Int, toIndex : Int, completion: (() -> Void)?)
     {
         DispatchQueue.main.sync(execute: { () -> Void in
-            self.delegate?.didCapturedFrame(self.images[index] as! UIImage, depthFrame: self.depthFrames[index].depthFrame);
+            self.delegate?.didCapturedFrame(self.images[index], depthFrame: self.depthFrames[index].depthFrame);
         });
         
         Thread.sleep(forTimeInterval: 32.6 / 1000);//30 fps
@@ -150,6 +149,15 @@ class OSCameraFrameProviderSwift : OSCameraFrameProvider, OSContentLoadingProtoc
         
         return df;
     }
+    
+    private func prepareTestData(named: String) {
+        let image = UIImage(named: named)
+        if let image = image {
+            self.images.append(image)
+            self.depthFrames.append(OSCameraFrameProviderSwift.depthFrameForFile(named))
+        }
+    }
+    
     
 // MARK: OSContentLoadingProtocol
     
