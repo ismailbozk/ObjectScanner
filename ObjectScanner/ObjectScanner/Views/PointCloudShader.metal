@@ -59,6 +59,12 @@ vertex VertexOut pointCloudVertex (const device OSPoint *pointCloud [[buffer (0)
     vertexPoint = uniforms.viewMatrix * vertexPoint;
     vertexPoint.z += kPointCloudShaderDepthMean;
     
+    
+    /*
+     Clip Space and Normalized Device Coordinates
+
+     We need to make sure that the points produced by our projection transform are in the coordinate space it expects. Everything that is to be visible on the screen must be scaled down into a box that ranges from -1 to 1 in x, -1 to 1 in y, and 0 to 1 in z. This coordinate system is called clip space, and it’s where the hardware determines if triangles are completely visible, partially visible, or completely invisible. The edges of triangles that are partially visible are clipped against the planes of clip space. This clipping process may turn a triangle into a polygon, which is then re-triangulated to produce the geometry that gets fed to the fragment shader.
+     */
     // put it into clip space
     vertexPoint.x = - vertexPoint.x;
     vertexPoint.y = - vertexPoint.y;
